@@ -1,5 +1,40 @@
 # ngrx-crud
 
+**_Note_** : Still in active development. No where near usable . Any contribution is welcome. 
+
+## Introduction
+This library tries to automate CRUD operations related logic while using ngrx. 
+
+**Input** : Store name, for ex. `User` 
+
+**Output** : 
+
+store with following actions : 
+ - UserLOAD 
+ - UserADD
+ - UserEDIT
+ - UserDELETE
+
+ **Assumptions** 
+  - Model contains `id` as param 
+  - payload for delete and update contains the deleted element or updated element
+
+
+## TODO 
+
+Its in very infant state, hence has a huge todo list 
+  - Clean up the code 
+  - Better documentation
+  - Support status
+  - Add Effects 
+  - Prevent hardcoding of comparison of models 
+  - Provide support for types 
+  - Provide a generic Adapter to give server REST information
+  - Add support to handle default rest services 
+  - Add support to handle firebase by default 
+  - Add support to handle AWS Api Gateway by default 
+
+
 ## Installation
 
 To install this library, run:
