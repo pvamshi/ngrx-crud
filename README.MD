@@ -82,13 +82,21 @@ export class AppComponent {
 
   private inc = 0;
   constructor(private _store: Store<User>){
+<<<<<<< HEAD
     // User.name evauates to 'User' , if not sure just replace 'User' with <Model>.name , here User.name 
     this.tenants = this._store.select('User');
+=======
+    this.tenants = this._store.select('User'); // User.name evauates to 'User' , if not sure just replace 'User' with User.name 
+>>>>>>> cb23dab3b6b483382a2c632e132a921487c1ec17
   }
 
   add(){
     this._store.dispatch({
+<<<<<<< HEAD
       type :`User/add`,  // or type: `${User.name}/add`
+=======
+      type :`User/add`,  // or type: '${User.name}/add'
+>>>>>>> cb23dab3b6b483382a2c632e132a921487c1ec17
       payload: {id:++this.inc}
     })
   }
@@ -104,6 +112,10 @@ Its in very infant state, hence has a huge todo list
   - Better documentation
   - Support status
   - Add Effects 
+<<<<<<< HEAD
+=======
+  - Prevent hardcoding of comparison of models 
+>>>>>>> cb23dab3b6b483382a2c632e132a921487c1ec17
   - Provide support for types 
   - Provide a generic Adapter to give server REST information
   - Add support to handle default rest services 
