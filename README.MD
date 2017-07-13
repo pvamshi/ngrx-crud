@@ -48,7 +48,9 @@ export class User implements StoreModel {
 import { addReducers } from 'ngrx-crud';
 
 // You can add one or more Models in the array provided
-export const reducers = addReducers([User]);
+export function getReducers(){
+   return addReducers([User]);
+}
 
 ```
 This generates a reducer function with all actions mentioned above 
@@ -64,7 +66,7 @@ This generates a reducer function with all actions mentioned above
   imports: [
     BrowserModule,
     FormsModule,
-    StoreModule.provideStore(reducers),
+    StoreModule.provideStore(getReducers()),
   ],
   providers: [],
   bootstrap: [AppComponent]
