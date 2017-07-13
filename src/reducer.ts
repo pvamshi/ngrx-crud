@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { StoreModel } from "models";
+import { StoreModel } from ".";
 
 export function addReducers(models: (new () => StoreModel)[]) {
   const reducers = {};

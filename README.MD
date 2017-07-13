@@ -1,24 +1,101 @@
-# ngrx-crud
+# ngrx-crud ( Pre-Alpha stage)
 
-**_Note_** : Still in active development. No where near usable . Any contribution is welcome. 
+**_Note_** : Still in active development. Limited functionality available.
 
 ## Introduction
 This library tries to automate CRUD operations related logic while using ngrx. 
 
-**Input** : Store name, for ex. `User` 
+**Input** : Model class which implements interface provided in the library, for ex. `User` 
 
 **Output** : 
 
 store with following actions : 
- - UserLOAD 
- - UserADD
- - UserEDIT
- - UserDELETE
+ - User/load 
+ - User/add
+ - User/edit
+ - User/delete
 
  **Assumptions** 
-  - Model contains `id` as param 
   - payload for delete and update contains the deleted element or updated element
 
+## Installation 
+
+`npm install --save ngrx-store`
+
+## Consuming this library
+
+### Step 1: Create a Model 
+
+Create a Model ( or more ) which implements `StoreModel` provided by this library: 
+
+```typescript
+import { StoreModel } from 'ngrx-crud';
+
+export class User implements StoreModel {
+  id: string; // or any other identification param 
+  // other params 
+
+  //implement `isEqual` method to compare two models are the same 
+  public isEqual(user: User): boolean {
+    return this.id === user.id;
+  }
+}
+
+```
+
+### Step 2: Create Reducers 
+```typescript
+import { addReducers } from 'ngrx-crud';
+
+// You can add one or more Models in the array provided
+export const reducers = addReducers([User]);
+
+```
+This generates a reducer function with all actions mentioned above 
+
+### Step 3: Proceed with ngrx usage as usual 
+
+```typescript
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    StoreModule.provideStore(reducers),
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+```typescript
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  users : Observable<User[]>;
+
+  private inc = 0;
+  constructor(private _store: Store<User>){
+    // User.name evauates to 'User' , if not sure just replace 'User' with <Model>.name , here User.name 
+    this.tenants = this._store.select('User');
+  }
+
+  add(){
+    this._store.dispatch({
+      type :`User/add`,  // or type: `${User.name}/add`
+      payload: {id:++this.inc}
+    })
+  }
+}
+
+
+```
 
 ## TODO 
 
@@ -27,7 +104,6 @@ Its in very infant state, hence has a huge todo list
   - Better documentation
   - Support status
   - Add Effects 
-  - Prevent hardcoding of comparison of models 
   - Provide support for types 
   - Provide a generic Adapter to give server REST information
   - Add support to handle default rest services 
@@ -35,72 +111,7 @@ Its in very infant state, hence has a huge todo list
   - Add support to handle AWS Api Gateway by default 
 
 
-## Installation
 
-To install this library, run:
-
-```bash
-$ npm install ngrx-crud --save
-```
-
-## Consuming your library
-
-Once you have published your library to npm, you can import your library in any Angular application by running:
-
-```bash
-$ npm install ngrx-crud
-```
-
-and then from your Angular `AppModule`:
-
-```typescript
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
-
-// Import your library
-import { SampleModule } from 'ngrx-crud';
-
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-
-    // Specify your library as an import
-    LibraryModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
-```
-
-Once your library is imported, you can use its components, directives and pipes in your Angular application:
-
-```xml
-<!-- You can now use your library component in app.component.html -->
-<h1>
-  {{title}}
-</h1>
-<sampleComponent></sampleComponent>
-```
-
-## Development
-
-To generate all `*.js`, `*.d.ts` and `*.metadata.json` files:
-
-```bash
-$ npm run build
-```
-
-To lint all `*.ts` files:
-
-```bash
-$ npm run lint
-```
 
 ## License
 
