@@ -84,7 +84,6 @@ export class AppComponent {
   constructor(private _store: Store<User>){
     // User.name evauates to 'User' , if not sure just replace 'User' with <Model>.name , here User.name 
     this.tenants = this._store.select('User');
-    this.tenants = this._store.select('User'); // User.name evauates to 'User' , if not sure just replace 'User' with User.name 
   }
 
   add(){
@@ -105,7 +104,6 @@ Its in very infant state, hence has a huge todo list
   - Better documentation
   - Support status
   - Add Effects 
-  - Prevent hardcoding of comparison of models 
   - Provide support for types 
   - Provide a generic Adapter to give server REST information
   - Add support to handle default rest services 
