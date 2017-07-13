@@ -1,5 +1,5 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
-import { CommonModule } from '@angular/common';
+// import { NgModule, ModuleWithProviders } from '@angular/core';
+// import { CommonModule } from '@angular/common';
 // import { SampleComponent } from './sample.component';
 // import { SampleDirective } from './sample.directive';
 // import { SamplePipe } from './sample.pipe';
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 // export * from './sample.pipe';
 // export * from './sample.service';
 export * from './reducer';
-
+export * from './models';
 // @NgModule({
 //   imports: [
 //     CommonModule
