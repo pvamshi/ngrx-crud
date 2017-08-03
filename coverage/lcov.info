@@ -1,5 +1,5 @@
 TN:
-SF:/home/vamshi/code/temp/src/hello-world.component.ts
+SF:/home/vamshi/code/ngrx-crud/src/hello-world.component.ts
 FN:7,(anonymous_1)
 FN:3,HelloWorldComponent
 FNF:2
@@ -16,7 +16,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:/home/vamshi/code/temp/src/index.ts
+SF:/home/vamshi/code/ngrx-crud/src/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -26,7 +26,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:/home/vamshi/code/temp/src/store-generator.module.ts
+SF:/home/vamshi/code/ngrx-crud/src/store-generator.module.ts
 FN:10,(anonymous_1)
 FN:11,(anonymous_3)
 FNF:2
