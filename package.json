@@ -60,6 +60,7 @@
     "@mattlewis92/webpack-karma-die-hard": "^1.0.4",
     "@ngrx/effects": "^4.0.2",
     "@ngrx/store": "^4.0.2",
+    "@ngrx/store-devtools": "^4.0.0",
     "@ngtools/webpack": "^1.5.2",
     "@types/chai": "^4.0.0",
     "@types/html-webpack-plugin": "^2.11.2",

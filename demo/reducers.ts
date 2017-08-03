@@ -1,65 +1,50 @@
-import { Tenant } from "./models";
+import { Tenant } from './models';
+import * as tenant from './tenant/actions';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
 
-export interface State {
+export interface TenantState {
   ids: string[];
   entities: { [id: string]: Tenant };
-  selectedTenantId: string | null;
+  selectedTenantId: string;
 }
 
-export const initialState: State = {
-  ids: [],
-  entities: {},
-  selectedTenantId: null
+export const initialState: TenantState = {
+  ids: ['0'],
+  entities: {
+    '0': {
+      id: '0',
+      name: 'Tenant one'
+    }
+  },
+  selectedTenantId: '0'
 };
 
 export function reducer(
   state = initialState,
-  action: book.Actions | collection.Actions
-): State {
+  action: tenant.Actions
+): TenantState {
   switch (action.type) {
-    case book.SEARCH_COMPLETE:
-    case collection.LOAD_SUCCESS: {
-      const books = action.payload;
-      const newBooks = books.filter(book => !state.entities[book.id]);
+    case tenant.ADD: {
+      const tenant = action.payload;
 
-      const newBookIds = newBooks.map(book => book.id);
-      const newBookEntities = newBooks.reduce(
-        (entities: { [id: string]: Book }, book: Book) => {
-          return Object.assign(entities, {
-            [book.id]: book
-          });
-        },
-        {}
-      );
-
-      return {
-        ids: [...state.ids, ...newBookIds],
-        entities: Object.assign({}, state.entities, newBookEntities),
-        selectedBookId: state.selectedBookId
-      };
-    }
-
-    case book.LOAD: {
-      const book = action.payload;
-
-      if (state.ids.indexOf(book.id) > -1) {
+      if (state.ids.indexOf(tenant.id) > -1) {
         return state;
       }
 
       return {
-        ids: [...state.ids, book.id],
+        ids: [...state.ids, tenant.id],
         entities: Object.assign({}, state.entities, {
-          [book.id]: book
+          [tenant.id]: tenant
         }),
-        selectedBookId: state.selectedBookId
+        selectedTenantId: state.selectedTenantId
       };
     }
 
-    case book.SELECT: {
+    case tenant.SELECT: {
       return {
         ids: state.ids,
         entities: state.entities,
-        selectedBookId: action.payload
+        selectedTenantId: action.payload
       };
     }
 
@@ -77,15 +62,15 @@ export function reducer(
  * focused so they can be combined and composed to fit each particular
  * use-case.
  */
+export const getTenantState = createFeatureSelector<TenantState>('tenant');
+export const getEntities = (state: TenantState) => state.entities;
 
-export const getEntities = (state: State) => state.entities;
+export const getIds = (state: TenantState) => state.ids;
 
-export const getIds = (state: State) => state.ids;
-
-export const getSelectedId = (state: State) => state.selectedBookId;
-
+export const getSelectedId = (state: TenantState) => state.selectedTenantId;
+export const getEntitiesState = createSelector(getTenantState, getEntities);
 export const getSelected = createSelector(
-  getEntities,
+  getEntitiesState,
   getSelectedId,
   (entities, selectedId) => {
     return entities[selectedId];
@@ -95,5 +80,3 @@ export const getSelected = createSelector(
 export const getAll = createSelector(getEntities, getIds, (entities, ids) => {
   return ids.map(id => entities[id]);
 });
-
-export TenantAction 
