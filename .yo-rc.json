@@ -1,7 +1,14 @@
 {
-  "generator-angular2-library": {
-    "promptValues": {
-      "gitRepositoryUrl": "https://github.com/pvamshi/ngrx-crud"
-    }
+  "generator-angular-library": {
+    "githubUsername": "pvamshi",
+    "githubRepoName": "ngrx-crud",
+    "npmModuleName": "ngrx-crud",
+    "moduleGlobal": "StoreGeneratorModule",
+    "ngModuleName": "StoreGeneratorModule",
+    "selectorPrefix": "ngrx-crud",
+    "projectTitle": "CRUD generator for ngrx",
+    "projectDescription": "Generate code for a given model",
+    "authorName": "Vamshi Krishna Pothka",
+    "packageManager": "npm"
   }
 }
