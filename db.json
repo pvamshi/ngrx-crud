@@ -1,0 +1,40 @@
+{
+  "tenants": [
+    {
+      "id": "0",
+      "name": "One"
+    },
+    {
+      "id": "1",
+      "name": "Two"
+    },
+    {
+      "id": "2",
+      "name": "Three"
+    },
+    {
+      "id": "3",
+      "name": "Ten"
+    },
+    {
+      "id": "4",
+      "name": "Four"
+    },
+    {
+      "id": "9",
+      "name": "Nine"
+    },
+    {
+      "id": "10",
+      "name": "Ten"
+    },
+    {
+      "id": "11",
+      "name": "Eleven"
+    },
+    {
+      "id": "12",
+      "name": "Twelve"
+    }
+  ]
+}
