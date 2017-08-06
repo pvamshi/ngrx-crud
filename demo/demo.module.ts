@@ -5,27 +5,28 @@ import { StoreGeneratorModule } from '../src';
 import { DemoComponent } from './demo.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
-import { reducer } from './reducers';
+import { getReducer } from './reducers';
 import { TenantService } from './tenant.service';
 import { TenantEffects } from './tenant/effects';
 import { EffectsModule } from '@ngrx/effects';
 import { getAction, ActionCollection } from './tenant/actions';
-import { Tenant } from './models';
+import { Tenant, User } from './models';
 
 export const tenantAction: ActionCollection<Tenant> = getAction(Tenant);
+export const userAction: ActionCollection<User> = getAction(User);
 @NgModule({
   declarations: [DemoComponent],
   imports: [
     BrowserModule,
     StoreGeneratorModule.forRoot(),
-    StoreModule.forRoot(reducer),
+    StoreModule.forRoot(getReducer(User)),
     StoreDevtoolsModule.instrument({
-      maxAge: 25 //  Retains last 25 states
+      maxAge: 25, //  Retains last 25 states
     }),
     EffectsModule.forRoot([TenantEffects]),
-    HttpModule
+    HttpModule,
   ],
   providers: [TenantService],
-  bootstrap: [DemoComponent]
+  bootstrap: [DemoComponent],
 })
 export class DemoModule {}
