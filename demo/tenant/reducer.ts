@@ -1,53 +1,44 @@
 import { Tenant } from '../models';
-import { tenantAction } from '../demo.module';
+import { tenantAction as entityAction } from '../demo.module';
 import { Action } from '@ngrx/store';
-import {
-  Actions,
-  LoadSuccessAction,
-  AddSuccessAction,
-  EditAction
-} from './actions';
+import { Actions, LoadSuccessAction, AddSuccessAction, EditAction } from './actions';
+import { StoreModel } from '../../src';
 
-export interface State {
-  entities: Tenant[];
-  selectedEntityId: string;
+export interface State<T> {
+  entities: T[];
+  selectedEntityId: string | number;
 }
 
-const initialState: State = {
-  entities: [],
-  selectedEntityId: '0'
-};
-
-export function reducer(state = initialState, action: Actions<Tenant>): State {
+export function reducer<T extends StoreModel>(
+  state = getInitialState<T>(),
+  action: Actions<Tenant>,
+): State<T> {
   switch (action.type) {
-    case tenantAction.LOAD_SUCCESS:
+    case entityAction.LOAD_SUCCESS:
       return {
-        entities: (<LoadSuccessAction<Tenant>>action).payload,
-        selectedEntityId: state.selectedEntityId
+        entities: (<LoadSuccessAction<T>>action).payload,
+        selectedEntityId: state.selectedEntityId,
       };
-    case tenantAction.ADD_SUCCESS:
+    case entityAction.ADD_SUCCESS:
       return {
-        entities: [
-          ...state.entities,
-          (<AddSuccessAction<Tenant>>action).payload
-        ],
-        selectedEntityId: state.selectedEntityId
+        entities: [...state.entities, (<AddSuccessAction<T>>action).payload],
+        selectedEntityId: state.selectedEntityId,
       };
-    case tenantAction.EDIT:
-      const idx: number = state.entities.findIndex((tenant: Tenant) =>
-        tenant.isEqual((<EditAction<Tenant>>action).payload)
+    case entityAction.EDIT:
+      const idx: number = state.entities.findIndex((entity: T) =>
+        entity.isEqual((<EditAction<T>>action).payload),
       );
       if (idx === -1) {
         return state;
       }
       const temp = [...state.entities];
-      temp[idx] = (<EditAction<Tenant>>action).payload;
+      temp[idx] = (<EditAction<T>>action).payload;
       return Object.assign(state, { entities: temp });
-    // case tenantAction.DELETE:
+    // case entityAction.DELETE:
     //   return Object.assign(state, {
     //     aentities: state.entities.filter((tenant: Tenant) => tenant.isEqual((<DeleteAction<Tenant>>action).payload)),a
     //   });
-    // case tenantAction.SELECT:
+    // case entityAction.SELECT:
     //   return Object.assign(state, {
     //     selectedTenantId: action.payload,
     //   });
@@ -57,6 +48,12 @@ export function reducer(state = initialState, action: Actions<Tenant>): State {
   }
 }
 
-export const getEntities = (state: State) => state.entities;
+function getInitialState<T>(): State<T> {
+  return {
+    entities: [],
+    selectedEntityId: '0',
+  };
+}
+export const getEntities = <T>(state: State<T>) => state.entities;
 
-export const getSelectedId = (state: State) => state.selectedEntityId;
+export const getSelectedId = <T>(state: State<T>) => state.selectedEntityId;

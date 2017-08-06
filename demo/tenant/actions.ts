@@ -41,8 +41,8 @@ export interface ActionCollection<T> {
   // SelectAction: {  payload: T } & Action;
 }
 
-export function getAction<T>(c: new () => T): ActionCollection<T> {
-  const entityName = c.name;
+export function getAction<T>(c: { name: string }): ActionCollection<T> {
+  const { name: entityName } = c;
   const LOAD: string = entityName + '/load';
   const LOAD_SUCCESS = entityName + '/load/success';
   const ADD = entityName + '/add';
@@ -58,25 +58,25 @@ export function getAction<T>(c: new () => T): ActionCollection<T> {
 
   function getLoadAction(): LoadAction<T> {
     return {
-      type: LOAD
+      type: LOAD,
     };
   }
   function getLoadSuccessAction(payload: T[]): LoadSuccessAction<T> {
     return {
       type: LOAD_SUCCESS,
-      payload: payload
+      payload: payload,
     };
   }
   function getAddAction(payload: T): AddAction<T> {
     return {
       type: ADD,
-      payload: payload
+      payload: payload,
     };
   }
   function getAddSuccessAction(payload: T): AddSuccessAction<T> {
     return {
       type: ADD_SUCCESS,
-      payload: payload
+      payload: payload,
     };
   }
 
@@ -115,7 +115,7 @@ export function getAction<T>(c: new () => T): ActionCollection<T> {
     getAddAction,
     getAddSuccessAction,
     getLoadAction,
-    getLoadSuccessAction
+    getLoadSuccessAction,
     // EditAction,
     // DeleteAction,
     // SelectAction,
