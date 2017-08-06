@@ -3,8 +3,7 @@ import * as fromRoot from './reducers';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Tenant } from './models';
-import * as actions from './tenant/actions';
-
+import { tenantAction } from './demo.module';
 import 'rxjs/add/operator/do';
 import { TenantService } from './tenant.service';
 @Component({
@@ -47,10 +46,9 @@ export class DemoComponent implements OnInit {
     this.tenant.name = (<HTMLInputElement>event.target).value;
   }
   public addTenant() {
-    this.store.dispatch(new actions.AddAction(this.tenant));
-    // this._tenantService.addTenant(this.tenant).subscribe(console.log);
+    this.store.dispatch(tenantAction.getAddAction(this.tenant));
   }
   ngOnInit(): void {
-    this.store.dispatch(new actions.LoadAction());
+    this.store.dispatch(tenantAction.getLoadAction());
   }
 }

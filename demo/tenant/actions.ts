@@ -1,52 +1,123 @@
 import { Action } from '@ngrx/store';
-import { Tenant } from '../models';
 
-export const LOAD = '/tenant/load';
-export const LOAD_SUCCESS = '/tenant/load/success';
-export const ADD = '/tenant/add';
-export const ADD_SUCCESS = '/tenant/add/success';
-export const EDIT = '/tenant/edit';
-export const SELECT = '/tenant/select';
-export const DELETE = '/tenant/delete';
-
-export class LoadAction implements Action {
-  readonly type = LOAD;
-  constructor() {}
+export interface LoadSuccessAction<T> extends Action {
+  payload: T[];
 }
 
-export class LoadSuccessAction implements Action {
-  readonly type = LOAD_SUCCESS;
-  constructor(public payload: Tenant[]) {}
+export interface LoadAction<T> extends Action {}
+
+export interface AddAction<T> extends Action {
+  payload: T;
 }
-export class AddAction implements Action {
-  readonly type = ADD;
-  constructor(public payload: Tenant) {}
+export interface EditAction<T> extends Action {
+  payload: T;
 }
-export class AddSuccessAction implements Action {
-  readonly type = ADD_SUCCESS;
-  constructor(public payload: Tenant) {}
+export interface AddSuccessAction<T> extends Action {
+  payload: T;
+}
+export type Actions<T> =
+  | LoadAction<T>
+  | AddAction<T>
+  | EditAction<T>
+  // | SelectAction
+  // | DeleteAction
+  | AddSuccessAction<T>
+  | LoadSuccessAction<T>;
+export interface ActionCollection<T> {
+  LOAD: string;
+  LOAD_SUCCESS: string;
+  ADD: string;
+  ADD_SUCCESS: string;
+  EDIT: string;
+  // EDIT_SUCCESS: string;
+  SELECT: string;
+  DELETE: string;
+  getLoadAction(): LoadAction<T>;
+  getLoadSuccessAction(payload: T[]): LoadSuccessAction<T>;
+  getAddAction(payload: T): AddAction<T>;
+  getAddSuccessAction(payload: T): AddSuccessAction<T>;
+  // EditAction: {  payload: T } & Action;
+  // DeleteAction: {  payload: T } & Action;
+  // SelectAction: {  payload: T } & Action;
 }
 
-export class SelectAction implements Action {
-  readonly type = SELECT;
-  constructor(public payload: string) {}
-}
+export function getAction<T>(c: new () => T): ActionCollection<T> {
+  const entityName = c.name;
+  const LOAD: string = entityName + '/load';
+  const LOAD_SUCCESS = entityName + '/load/success';
+  const ADD = entityName + '/add';
+  const ADD_SUCCESS = entityName + '/add/success';
+  const EDIT = entityName + '/edit';
+  const SELECT = entityName + '/select';
+  const DELETE = entityName + '/delete';
 
-export class EditAction implements Action {
-  readonly type = EDIT;
-  constructor(public payload: Tenant) {}
-}
+  // class LoadAction implements Action {
+  //   readonly type = LOAD;
+  //   constructor() {}
+  // }
 
-export class DeleteAction implements Action {
-  readonly type = DELETE;
-  constructor(public payload: Tenant) {}
-}
+  function getLoadAction(): LoadAction<T> {
+    return {
+      type: LOAD
+    };
+  }
+  function getLoadSuccessAction(payload: T[]): LoadSuccessAction<T> {
+    return {
+      type: LOAD_SUCCESS,
+      payload: payload
+    };
+  }
+  function getAddAction(payload: T): AddAction<T> {
+    return {
+      type: ADD,
+      payload: payload
+    };
+  }
+  function getAddSuccessAction(payload: T): AddSuccessAction<T> {
+    return {
+      type: ADD_SUCCESS,
+      payload: payload
+    };
+  }
 
-export type Actions =
-  | LoadAction
-  | AddAction
-  | EditAction
-  | SelectAction
-  | DeleteAction
-  | AddSuccessAction
-  | LoadSuccessAction;
+  class SelectAction implements Action {
+    readonly type = SELECT;
+    constructor(public payload: string | number) {}
+  }
+
+  class EditAction implements Action {
+    readonly type = EDIT;
+    constructor(public payload: T) {}
+  }
+
+  class DeleteAction implements Action {
+    readonly type = DELETE;
+    constructor(public payload: T) {}
+  }
+
+  // type Actions =
+  //   | LoadAction
+  //   | AddAction
+  //   | EditAction
+  //   | SelectAction
+  //   | DeleteAction
+  //   | AddSuccessAction
+  //   | LoadSuccessAction;
+
+  return {
+    LOAD,
+    LOAD_SUCCESS,
+    ADD,
+    ADD_SUCCESS,
+    EDIT,
+    SELECT,
+    DELETE,
+    getAddAction,
+    getAddSuccessAction,
+    getLoadAction,
+    getLoadSuccessAction
+    // EditAction,
+    // DeleteAction,
+    // SelectAction,
+  };
+}

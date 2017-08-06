@@ -9,7 +9,10 @@ import { reducer } from './reducers';
 import { TenantService } from './tenant.service';
 import { TenantEffects } from './tenant/effects';
 import { EffectsModule } from '@ngrx/effects';
+import { getAction, ActionCollection } from './tenant/actions';
+import { Tenant } from './models';
 
+export const tenantAction: ActionCollection<Tenant> = getAction(Tenant);
 @NgModule({
   declarations: [DemoComponent],
   imports: [

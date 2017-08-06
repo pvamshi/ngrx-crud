@@ -1,5 +1,12 @@
 import { Tenant } from '../models';
-import * as tenantAction from './actions';
+import { tenantAction } from '../demo.module';
+import { Action } from '@ngrx/store';
+import {
+  Actions,
+  LoadSuccessAction,
+  AddSuccessAction,
+  EditAction
+} from './actions';
 
 export interface State {
   entities: Tenant[];
@@ -11,42 +18,39 @@ const initialState: State = {
   selectedEntityId: '0'
 };
 
-export function reducer(
-  state = initialState,
-  action: tenantAction.Actions
-): State {
+export function reducer(state = initialState, action: Actions<Tenant>): State {
   switch (action.type) {
     case tenantAction.LOAD_SUCCESS:
       return {
-        entities: action.payload,
+        entities: (<LoadSuccessAction<Tenant>>action).payload,
         selectedEntityId: state.selectedEntityId
       };
     case tenantAction.ADD_SUCCESS:
-      const tenant = action.payload;
       return {
-        entities: [...state.entities, action.payload],
+        entities: [
+          ...state.entities,
+          (<AddSuccessAction<Tenant>>action).payload
+        ],
         selectedEntityId: state.selectedEntityId
       };
     case tenantAction.EDIT:
       const idx: number = state.entities.findIndex((tenant: Tenant) =>
-        tenant.isEqual(action.payload)
+        tenant.isEqual((<EditAction<Tenant>>action).payload)
       );
       if (idx === -1) {
         return state;
       }
       const temp = [...state.entities];
-      temp[idx] = action.payload;
+      temp[idx] = (<EditAction<Tenant>>action).payload;
       return Object.assign(state, { entities: temp });
-    case tenantAction.DELETE:
-      return Object.assign(state, {
-        entities: state.entities.filter((tenant: Tenant) =>
-          tenant.isEqual(action.payload)
-        )
-      });
-    case tenantAction.SELECT:
-      return Object.assign(state, {
-        selectedTenantId: action.payload
-      });
+    // case tenantAction.DELETE:
+    //   return Object.assign(state, {
+    //     aentities: state.entities.filter((tenant: Tenant) => tenant.isEqual((<DeleteAction<Tenant>>action).payload)),a
+    //   });
+    // case tenantAction.SELECT:
+    //   return Object.assign(state, {
+    //     selectedTenantId: action.payload,
+    //   });
     default: {
       return state;
     }

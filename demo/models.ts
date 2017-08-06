@@ -1,6 +1,9 @@
 import { StoreModel } from '../src';
 
-export interface Tenant extends StoreModel {
+export class Tenant implements StoreModel {
+  isEqual(otherStore: Tenant): boolean {
+    return otherStore.id === this.id;
+  }
   id: string;
   name: string;
 }
