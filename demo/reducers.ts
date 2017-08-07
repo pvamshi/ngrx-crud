@@ -1,99 +1,43 @@
-import { Tenant } from "./models";
+import { Tenant } from './models';
+import * as tenant from './tenant/actions';
+import * as fromTenant from './tenant/reducer';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { ActionCollection } from './tenant/actions';
+import { StoreModel } from '../src';
 
-export interface State {
-  ids: string[];
-  entities: { [id: string]: Tenant };
-  selectedTenantId: string | null;
+export interface State<T> {
+  'entity': fromTenant.State<T>;
+}
+// export const reducer = {
+//   tenant: fromTenant.reducer,
+// };
+const entityState: { [key: string]: any } = {};
+const entities: { [key: string]: any } = {};
+const actions: { [key: string]: any } = {};
+
+export const getTenantState = createFeatureSelector<fromTenant.State<Tenant>>(Tenant.name);
+
+function aaa<T>(c: { name: string }) {}
+
+export function getReducer<T extends StoreModel>(c: { name: string }) {
+  const entityName = c.name;
+  const entityAction: ActionCollection<T> = tenant.getAction(c);
+  actions[entityName] = entityAction;
+  entityState[entityName] = createFeatureSelector<fromTenant.State<T>>(entityName);
+  entities[entityName] = createSelector(entityState[entityName], fromTenant.getEntities);
+  return {
+    [entityName]: fromTenant.getReducer(entityAction),
+  };
 }
 
-export const initialState: State = {
-  ids: [],
-  entities: {},
-  selectedTenantId: null
-};
+export const getSelectedTenantId = createSelector(getTenantState, fromTenant.getSelectedId);
+export const getTenants = createSelector(getTenantState, fromTenant.getEntities);
 
-export function reducer(
-  state = initialState,
-  action: book.Actions | collection.Actions
-): State {
-  switch (action.type) {
-    case book.SEARCH_COMPLETE:
-    case collection.LOAD_SUCCESS: {
-      const books = action.payload;
-      const newBooks = books.filter(book => !state.entities[book.id]);
-
-      const newBookIds = newBooks.map(book => book.id);
-      const newBookEntities = newBooks.reduce(
-        (entities: { [id: string]: Book }, book: Book) => {
-          return Object.assign(entities, {
-            [book.id]: book
-          });
-        },
-        {}
-      );
-
-      return {
-        ids: [...state.ids, ...newBookIds],
-        entities: Object.assign({}, state.entities, newBookEntities),
-        selectedBookId: state.selectedBookId
-      };
-    }
-
-    case book.LOAD: {
-      const book = action.payload;
-
-      if (state.ids.indexOf(book.id) > -1) {
-        return state;
-      }
-
-      return {
-        ids: [...state.ids, book.id],
-        entities: Object.assign({}, state.entities, {
-          [book.id]: book
-        }),
-        selectedBookId: state.selectedBookId
-      };
-    }
-
-    case book.SELECT: {
-      return {
-        ids: state.ids,
-        entities: state.entities,
-        selectedBookId: action.payload
-      };
-    }
-
-    default: {
-      return state;
-    }
-  }
+export function getEntities(c: { name: string }) {
+  console.log('entities', entities);
+  return entities[c.name];
 }
 
-/**
- * Because the data structure is defined within the reducer it is optimal to
- * locate our selector functions at this level. If store is to be thought of
- * as a database, and reducers the tables, selectors can be considered the
- * queries into said database. Remember to keep your selectors small and
- * focused so they can be combined and composed to fit each particular
- * use-case.
- */
-
-export const getEntities = (state: State) => state.entities;
-
-export const getIds = (state: State) => state.ids;
-
-export const getSelectedId = (state: State) => state.selectedBookId;
-
-export const getSelected = createSelector(
-  getEntities,
-  getSelectedId,
-  (entities, selectedId) => {
-    return entities[selectedId];
-  }
-);
-
-export const getAll = createSelector(getEntities, getIds, (entities, ids) => {
-  return ids.map(id => entities[id]);
-});
-
-export TenantAction 
+export function getAction(c: { name: string }) {
+  return actions[c.name];
+}
