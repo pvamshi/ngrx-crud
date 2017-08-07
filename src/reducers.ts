@@ -1,102 +1,102 @@
 import { Action } from '@ngrx/store';
-import { StoreModel } from '.';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { StoreModel } from '../src';
+import {
+  Actions,
+  LoadSuccessAction,
+  AddSuccessAction,
+  EditAction,
+  ActionCollection,
+  getEntityAction
+} from './actions';
 
-const initStatus = {
-  load: null,
-  add: null,
-  edit: null,
-  delete: null
-};
-type ExtendedAction = { payload: any } & Action;
-export function addReducers(
-  models: (new () => StoreModel)[],
-  initialStore: any = null
+export interface State<T> {
+  'entity': EntityState<T>;
+}
+// export const reducer = {
+//   tenant: fromTenant.reducer,
+// };
+const entityState: { [key: string]: any } = {};
+const entities: { [key: string]: any } = {};
+const actions: { [key: string]: any } = {};
+
+export function getReducer<T extends StoreModel>(c: { name: string }) {
+  const entityName = c.name;
+  const entityAction: ActionCollection<T> = getEntityAction(c);
+  actions[entityName] = entityAction;
+  console.log('actions', actions);
+  entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
+  entities[entityName] = createSelector(
+    entityState[entityName],
+    getStateEntities
+  );
+  return {
+    [entityName]: getStateReducer(entityAction)
+  };
+}
+
+export function getEntities(c: { name: string }) {
+  console.log('entities', entities);
+  return entities[c.name];
+}
+
+export function getAction(c: { name: string }) {
+  return actions[c.name];
+}
+
+export interface EntityState<T> {
+  entities: T[];
+  selectedEntityId: string | number;
+}
+
+export function getStateReducer<T extends StoreModel>(
+  entityAction: ActionCollection<T>
 ) {
-  return models.reduce(
-    (accumulator: any, model: new () => StoreModel) =>
-      Object.assign(
-        accumulator,
-        addReducerForModel(model.name, initialStore),
-        addReducerForModelStatus(model.name)
-      ),
-    {}
-  );
-}
-
-function addReducerForModel(modelName: string, initialStore: any) {
-  return (store: any[] = initialStore, action: ExtendedAction) => {
-    const modelReducer = generateModelReducerMappingObj(modelName);
-    const reducerFn = modelReducer[action.type];
-    if (reducerFn) {
-      return reducerFn(store, action.payload);
+  return (state = getInitialState<T>(), action: Actions<T>): EntityState<T> => {
+    console.log('entityAction', entityAction);
+    switch (action.type) {
+      case entityAction.LOAD_SUCCESS:
+        return {
+          entities: (<LoadSuccessAction<T>>action).payload,
+          selectedEntityId: state.selectedEntityId
+        };
+      case entityAction.ADD_SUCCESS:
+        return {
+          entities: [...state.entities, (<AddSuccessAction<T>>action).payload],
+          selectedEntityId: state.selectedEntityId
+        };
+      case entityAction.EDIT:
+        const idx: number = state.entities.findIndex((entity: T) =>
+          entity.isEqual((<EditAction<T>>action).payload)
+        );
+        if (idx === -1) {
+          return state;
+        }
+        const temp = [...state.entities];
+        temp[idx] = (<EditAction<T>>action).payload;
+        return Object.assign(state, { entities: temp });
+      // case entityAction.DELETE:
+      //   return Object.assign(state, {
+      //     aentities: state.entities.filter((tenant: Tenant) => tenant.isEqual((<DeleteAction<Tenant>>action).payload)),a
+      //   });
+      // case entityAction.SELECT:
+      //   return Object.assign(state, {
+      //     selectedTenantId: action.payload,
+      //   });
+      default: {
+        return state;
+      }
     }
   };
 }
 
-function addReducerForModelStatus(modelName: string) {
-  return (store: any = initStatus, action: ExtendedAction) => {
-    const modelStatusReducer = generateModelStatusReducerMappingObj(modelName);
-    const reducerFn = modelStatusReducer[action.type];
-    if (reducerFn) {
-      return reducerFn(store, action.payload);
-    }
-  };
-}
-
-function generateModelStatusReducerMappingObj(modelName: string): any {
+function getInitialState<T>(): EntityState<T> {
   return {
-    [`{modelName}/load/start`]: (store: any, payload: any) =>
-      Object.assign(store, {
-        load: { status: 'inprogress', payload: payload }
-      }),
-    [`{modelName}/load/error`]: (store: any, payload: any) =>
-      Object.assign(store, { load: { status: 'error', payload: payload } }),
-    [`{modelName}/load/success`]: (store: any, payload: any) =>
-      Object.assign(store, { load: { status: 'done', payload: payload } }),
-    [`{modelname}/add/start`]: (store: any, payload: any) =>
-      Object.assign(store, { add: { status: 'inprogress', payload: payload } }),
-    [`{modelname}/add/error`]: (store: any, payload: any) =>
-      Object.assign(store, { add: { status: 'error', payload: payload } }),
-    [`{modelname}/add/success`]: (store: any, payload: any) =>
-      Object.assign(store, { add: { status: 'done', payload: payload } }),
-    [`{modelName}/edit/start`]: (store: any, payload: any) =>
-      Object.assign(store, {
-        edit: { status: 'inprogress', payload: payload }
-      }),
-    [`{modelName}/edit/error`]: (store: any, payload: any) =>
-      Object.assign(store, { edit: { status: 'error', payload: payload } }),
-    [`{modelName}/edit/success`]: (store: any, payload: any) =>
-      Object.assign(store, { edit: { status: 'done', payload: payload } }),
-    [`{modelName}/delete/start`]: (store: any, payload: any) =>
-      Object.assign(store, {
-        delete: { status: 'inprogress', payload: payload }
-      }),
-    [`{modelName}/delete/error`]: (store: any, payload: any) =>
-      Object.assign(store, { delete: { status: 'error', payload: payload } }),
-    [`{modelName}/delete/success`]: (store: any, payload: any) =>
-      Object.assign(store, { delete: { status: 'done', payload: payload } })
+    entities: [],
+    selectedEntityId: '0'
   };
 }
+export const getStateEntities = <T>(state: EntityState<T>) => state.entities;
 
-function generateModelReducerMappingObj(modelName: string): any {
-  return {
-    [`${modelName}/load`]: (store: any[], payload: any) => store,
-    [`${modelName}/add`]: (store: any[], payload: any) => [
-      ...(store ? store : []),
-      payload
-    ],
-    [`${modelName}/edit`]: generateModelEditReducer,
-    [`${modelName}/delete`]: (store: any[], payload: StoreModel) =>
-      store.filter((model: StoreModel) => model.isEqual(payload))
-  };
-}
-
-function generateModelEditReducer(store: any[], payload: any) {
-  let updatedModelIndex = store.findIndex((model: StoreModel) =>
-    model.isEqual(payload)
-  );
-  if (updatedModelIndex !== -1) {
-    return Object.assign([], store, { updatedModelIndex, payload });
-  }
-  return store;
-}
+export const getSelectedId = <T>(state: EntityState<T>) =>
+  state.selectedEntityId;
