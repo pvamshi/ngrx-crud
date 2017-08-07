@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for reducers.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> reducers.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">28.95% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>11/38</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">30.56% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>11/36</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Action } from '@ngrx/store';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { StoreModel } from '../src';
+import {
+  Actions,
+  LoadSuccessAction,
+  AddSuccessAction,
+  EditAction,
+  ActionCollection,
+  getEntityAction
+} from './actions';
+&nbsp;
+export interface State&lt;T&gt; {
+  'entity': EntityState&lt;T&gt;;
+}
+// export const reducer = {
+//   tenant: fromTenant.reducer,
+// };
+const entityState: { [key: string]: any } = {};
+const entities: { [key: string]: any } = {};
+const actions: { [key: string]: any } = {};
+&nbsp;
+<span class="fstat-no" title="function not covered" >export function getReducer&lt;T extends StoreModel&gt;(</span>c: { name: string }) {
+  const entityName = <span class="cstat-no" title="statement not covered" >c.name;</span>
+  const entityAction: ActionCollection&lt;T&gt; = <span class="cstat-no" title="statement not covered" >getEntityAction(c);</span>
+<span class="cstat-no" title="statement not covered" >  actions[entityName] = entityAction;</span>
+<span class="cstat-no" title="statement not covered" >  console.log('actions', actions);</span>
+<span class="cstat-no" title="statement not covered" >  entityState[entityName] = createFeatureSelector&lt;EntityState&lt;T&gt;&gt;(entityName);</span>
+<span class="cstat-no" title="statement not covered" >  entities[entityName] = createSelector(</span>
+    entityState[entityName],
+    getStateEntities
+  );
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    [entityName]: getStateReducer(entityAction)
+  };
+}
+&nbsp;
+<span class="fstat-no" title="function not covered" >export function getEntities(</span>c: { name: string }) {
+<span class="cstat-no" title="statement not covered" >  console.log('entities', entities);</span>
+<span class="cstat-no" title="statement not covered" >  return entities[c.name];</span>
+}
+&nbsp;
+<span class="fstat-no" title="function not covered" >export function getAction(</span>c: { name: string }) {
+<span class="cstat-no" title="statement not covered" >  return actions[c.name];</span>
+}
+&nbsp;
+export interface EntityState&lt;T&gt; {
+  entities: T[];
+  selectedEntityId: string | number;
+}
+&nbsp;
+<span class="fstat-no" title="function not covered" >export function getStateReducer&lt;T extends StoreModel&gt;(</span>
+  entityAction: ActionCollection&lt;T&gt;
+) {
+<span class="cstat-no" title="statement not covered" >  return <span class="fstat-no" title="function not covered" >(<span class="cstat-no" title="statement not covered" ></span>state = getInitialState&lt;T&gt;(),</span> action: Actions&lt;T&gt;): EntityState&lt;T&gt; =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    console.log('entityAction', entityAction);</span>
+<span class="cstat-no" title="statement not covered" >    switch (action.type) {</span>
+      case entityAction.LOAD_SUCCESS:
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          entities: (&lt;LoadSuccessAction&lt;T&gt;&gt;action).payload,
+          selectedEntityId: state.selectedEntityId
+        };
+      case entityAction.ADD_SUCCESS:
+<span class="cstat-no" title="statement not covered" >        return {</span>
+          entities: [...state.entities, (&lt;AddSuccessAction&lt;T&gt;&gt;action).payload],
+          selectedEntityId: state.selectedEntityId
+        };
+      case entityAction.EDIT:
+        const idx: number = <span class="cstat-no" title="statement not covered" >state.entities.findIndex(<span class="fstat-no" title="function not covered" >(</span>entity: T) =&gt;</span>
+<span class="cstat-no" title="statement not covered" >          entity.isEqual((&lt;EditAction&lt;T&gt;&gt;action).payload)</span>
+        );
+<span class="cstat-no" title="statement not covered" >        if (idx === -1) {</span>
+<span class="cstat-no" title="statement not covered" >          return state;</span>
+        }
+        const temp = [...<span class="cstat-no" title="statement not covered" >state.entities];</span>
+<span class="cstat-no" title="statement not covered" >        temp[idx] = (&lt;EditAction&lt;T&gt;&gt;action).payload;</span>
+<span class="cstat-no" title="statement not covered" >        return Object.assign(state, { entities: temp });</span>
+      // case entityAction.DELETE:
+      //   return Object.assign(state, {
+      //     aentities: state.entities.filter((tenant: Tenant) =&gt; tenant.isEqual((&lt;DeleteAction&lt;Tenant&gt;&gt;action).payload)),a
+      //   });
+      // case entityAction.SELECT:
+      //   return Object.assign(state, {
+      //     selectedTenantId: action.payload,
+      //   });
+      default: {
+<span class="cstat-no" title="statement not covered" >        return state;</span>
+      }
+    }
+  };
+}
+&nbsp;
+<span class="fstat-no" title="function not covered" >function getInitialState&lt;T&gt;(): EntityState&lt;T&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+    entities: [],
+    selectedEntityId: '0'
+  };
+}
+export const getStateEntities = <span class="fstat-no" title="function not covered" >&lt;T&gt;(</span>state: EntityState&lt;T&gt;) =&gt; <span class="cstat-no" title="statement not covered" >state.entities;</span>
+&nbsp;
+export const getSelectedId = <span class="fstat-no" title="function not covered" >&lt;T&gt;(</span>state: EntityState&lt;T&gt;) =&gt;
+<span class="cstat-no" title="statement not covered" >  state.selectedEntityId;</span>
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Aug 08 2017 00:44:37 GMT+0530 (IST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

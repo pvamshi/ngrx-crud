@@ -1,22 +1,58 @@
 import { Action } from '@ngrx/store';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { StoreModel } from '../src';
 import {
   Actions,
   LoadSuccessAction,
   AddSuccessAction,
   EditAction,
-  ActionCollection
-} from './actions';
-import { StoreModel } from '../../src';
+  ActionCollection,
+  getEntityAction
+} from './tenant/actions';
 
 export interface State<T> {
+  'entity': EntityState<T>;
+}
+// export const reducer = {
+//   tenant: fromTenant.reducer,
+// };
+const entityState: { [key: string]: any } = {};
+const entities: { [key: string]: any } = {};
+const actions: { [key: string]: any } = {};
+
+export function getReducer<T extends StoreModel>(c: { name: string }) {
+  const entityName = c.name;
+  const entityAction: ActionCollection<T> = getEntityAction(c);
+  actions[entityName] = entityAction;
+  console.log('actions', actions);
+  entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
+  entities[entityName] = createSelector(
+    entityState[entityName],
+    getStateEntities
+  );
+  return {
+    [entityName]: getStateReducer(entityAction)
+  };
+}
+
+export function getEntities(c: { name: string }) {
+  console.log('entities', entities);
+  return entities[c.name];
+}
+
+export function getAction(c: { name: string }) {
+  return actions[c.name];
+}
+
+export interface EntityState<T> {
   entities: T[];
   selectedEntityId: string | number;
 }
 
-export function getReducer<T extends StoreModel>(
+export function getStateReducer<T extends StoreModel>(
   entityAction: ActionCollection<T>
 ) {
-  return (state = getInitialState<T>(), action: Actions<T>): State<T> => {
+  return (state = getInitialState<T>(), action: Actions<T>): EntityState<T> => {
     console.log('entityAction', entityAction);
     switch (action.type) {
       case entityAction.LOAD_SUCCESS:
@@ -54,12 +90,13 @@ export function getReducer<T extends StoreModel>(
   };
 }
 
-function getInitialState<T>(): State<T> {
+function getInitialState<T>(): EntityState<T> {
   return {
     entities: [],
     selectedEntityId: '0'
   };
 }
-export const getEntities = <T>(state: State<T>) => state.entities;
+export const getStateEntities = <T>(state: EntityState<T>) => state.entities;
 
-export const getSelectedId = <T>(state: State<T>) => state.selectedEntityId;
+export const getSelectedId = <T>(state: EntityState<T>) =>
+  state.selectedEntityId;

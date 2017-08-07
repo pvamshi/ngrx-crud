@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromRoot from './reducers';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Tenant, User } from './models';
 // import { tenantAction, userAction } from './demo.module';
 import 'rxjs/add/operator/do';
 import { TenantService } from './tenant.service';
-import { getAction } from './reducers';
+import { State, getEntities, getAction } from '../src';
 @Component({
   selector: 'ngrx-crud-demo-app',
   template: `
@@ -30,14 +29,16 @@ import { getAction } from './reducers';
       </tbody>
     </table>
   `,
-  styles: ['table td, table th { padding: .5rem 1rem; }'],
+  styles: ['table td, table th { padding: .5rem 1rem; }']
 })
 export class DemoComponent implements OnInit {
   public tenants$: Observable<string>;
   public users$: Observable<User>;
   private tenant: Tenant = {} as Tenant;
-  constructor(private store: Store<fromRoot.State<User>>, private _tenantService: TenantService) {
-    this.users$ = store.select(fromRoot.getEntities(User)).do(console.log);
+  constructor(
+    private store: Store<State<User>> // private tenantStore: Store< // private _tenantService: TenantService
+  ) {
+    this.users$ = store.select(getEntities(User)).do(console.log);
   }
   public setId(event: KeyboardEvent) {
     this.tenant.id = (<HTMLInputElement>event.target).value;
@@ -53,8 +54,8 @@ export class DemoComponent implements OnInit {
     this.store.dispatch(
       getAction(User).getLoadSuccessAction([
         { id: '0', first: 'fff' } as User,
-        { id: '1', first: 'sss' } as User,
-      ]),
+        { id: '1', first: 'sss' } as User
+      ])
     );
   }
 }
