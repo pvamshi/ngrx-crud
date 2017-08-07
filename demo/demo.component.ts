@@ -36,9 +36,11 @@ export class DemoComponent implements OnInit {
   public users$: Observable<User>;
   private tenant: Tenant = {} as Tenant;
   constructor(
-    private store: Store<State<User>> // private tenantStore: Store< // private _tenantService: TenantService
+    private store: Store<State<User>>,
+    private tenantStore: Store<State<Tenant>> // private _tenantService: TenantService
   ) {
     this.users$ = store.select(getEntities(User)).do(console.log);
+    this.tenants$ = tenantStore.select(getEntities(Tenant));
   }
   public setId(event: KeyboardEvent) {
     this.tenant.id = (<HTMLInputElement>event.target).value;
@@ -56,6 +58,9 @@ export class DemoComponent implements OnInit {
         { id: '0', first: 'fff' } as User,
         { id: '1', first: 'sss' } as User
       ])
+    );
+    this.tenantStore.dispatch(
+      getAction(Tenant).getLoadSuccessAction([{ id: '0', name: 'First' }])
     );
   }
 }

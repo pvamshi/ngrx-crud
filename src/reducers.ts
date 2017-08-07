@@ -20,20 +20,27 @@ const entityState: { [key: string]: any } = {};
 const entities: { [key: string]: any } = {};
 const actions: { [key: string]: any } = {};
 
-export function getReducer<T extends StoreModel>(c: { name: string }) {
-  const entityName = c.name;
-  const entityAction: ActionCollection<T> = getEntityAction(c);
-  actions[entityName] = entityAction;
-  console.log('actions', actions);
-  entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
-  entities[entityName] = createSelector(
-    entityState[entityName],
-    getStateEntities
-  );
-  return {
-    [entityName]: getStateReducer(entityAction)
-  };
+export function getReducers<T extends StoreModel>(cs: { name: string }[]) {
+  const reducer: { [key: string]: any } = {};
+  cs.forEach(c => {
+    const entityName = c.name;
+    const entityAction: ActionCollection<T> = getEntityAction(c);
+    actions[entityName] = entityAction;
+    console.log('actions', actions);
+    entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
+    entities[entityName] = createSelector(
+      entityState[entityName],
+      getStateEntities
+    );
+    reducer[entityName] = getStateReducer(entityAction);
+  });
+  return reducer;
 }
+// export function getReducer<T extends StoreModel>(c: { name: string }) {
+//   return {
+//     [entityName]: getStateReducer(entityAction)
+//   };
+// }
 
 export function getEntities(c: { name: string }) {
   console.log('entities', entities);
