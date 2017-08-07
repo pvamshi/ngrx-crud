@@ -21,12 +21,12 @@ export const userAction: ActionCollection<User> = getAction(User);
     StoreGeneratorModule.forRoot(),
     StoreModule.forRoot(getReducer(User)),
     StoreDevtoolsModule.instrument({
-      maxAge: 25, //  Retains last 25 states
+      maxAge: 25 //  Retains last 25 states
     }),
     EffectsModule.forRoot([TenantEffects]),
-    HttpModule,
+    HttpModule
   ],
   providers: [TenantService],
-  bootstrap: [DemoComponent],
+  bootstrap: [DemoComponent]
 })
 export class DemoModule {}

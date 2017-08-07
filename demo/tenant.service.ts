@@ -16,9 +16,7 @@ export class TenantService {
   public addTenant(tenant: Tenant): Observable<Tenant> {
     console.log('tenant add', tenant);
     let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
-    return this._http
-      .post(this.url, tenant, options)
-      .map(res => res.json() as Tenant);
+    // let options = new RequestOptions({ headers: headers });
+    return this._http.post(this.url, tenant).map(res => res.json() as Tenant);
   }
 }
