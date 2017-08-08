@@ -37,9 +37,9 @@ export class DemoComponent implements OnInit {
   private tenant: Tenant = {} as Tenant;
   constructor(
     private store: Store<State<User>>,
-    private tenantStore: Store<State<Tenant>> // private _tenantService: TenantService
+    private tenantStore: Store<State<Tenant>>
   ) {
-    this.users$ = store.select(getEntities(User)).do(console.log);
+    this.users$ = store.select(getEntities(User));
     this.tenants$ = tenantStore.select(getEntities(Tenant));
   }
   public setId(event: KeyboardEvent) {
@@ -52,15 +52,16 @@ export class DemoComponent implements OnInit {
     // this.store.dispatch(tenantAction.getAddAction(this.tenant));
   }
   ngOnInit(): void {
-    // this.store.dispatch(tenantAction.getLoadAction());
-    this.store.dispatch(
-      getAction(User).getLoadSuccessAction([
-        { id: '0', first: 'fff' } as User,
-        { id: '1', first: 'sss' } as User
-      ])
-    );
-    this.tenantStore.dispatch(
-      getAction(Tenant).getLoadSuccessAction([{ id: '0', name: 'First' }])
-    );
+    this.tenantStore.dispatch(getAction(Tenant).getLoadAction());
+    this.store.dispatch(getAction(User).getLoadAction());
+    // this.store.dispatch(
+    //   getAction(User).getLoadSuccessAction([
+    //     { id: '0', first: 'fff' } as User,
+    //     { id: '1', first: 'sss' } as User
+    //   ])
+    // );
+    // this.tenantStore.dispatch(
+    // getAction(Tenant).getLoadSuccessAction([{ id: '0', name: 'First' }])
+    // );
   }
 }

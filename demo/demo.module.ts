@@ -23,7 +23,7 @@ import { Tenant, User } from './models';
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
-    // EffectsModule.forRoot([TenantEffects]),
+    EffectsModule.forRoot([TenantEffects]),
     HttpModule
   ],
   providers: [TenantService],
