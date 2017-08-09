@@ -19,21 +19,21 @@ import { EntityEffects, EntityService, APP_CONFIG } from '../src';
     StoreModule.forRoot(getReducers([User, Tenant])),
     // StoreModule.forRoot(getReducer(Tenant)),
     StoreDevtoolsModule.instrument({
-      maxAge: 25 //  Retains last 25 states
+      maxAge: 25, //  Retains last 25 states
     }),
     EffectsModule.forRoot([EntityEffects]),
-    HttpModule
+    HttpModule,
   ],
   providers: [
     EntityService,
     {
       provide: APP_CONFIG,
       useValue: {
-        apiEndpoint: 'http://localhost:3000'
-      }
-    }
+        apiEndpoint: 'http://localhost:3000',
+      },
+    },
   ],
   // providers: [{ provide: EntityService, useClass: TenantService }],
-  bootstrap: [DemoComponent]
+  bootstrap: [DemoComponent],
 })
 export class DemoModule {}

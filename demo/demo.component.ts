@@ -5,7 +5,7 @@ import { Tenant, User } from './models';
 // import { tenantAction, userAction } from './demo.module';
 import 'rxjs/add/operator/do';
 import { TenantService } from './tenant.service';
-import { State, getEntities, getAction } from '../src';
+import { State, getEntities, getAction, getLoadStatus, Status } from '../src';
 @Component({
   selector: 'ngrx-crud-demo-app',
   template: `
@@ -14,7 +14,8 @@ import { State, getEntities, getAction } from '../src';
     <input type="text" (keyup)="setName($event)" placeholder="Tenant Name"/>
     <button type="button" (click)="addTenant()" value="Add">Add </button>
     <hr/>
-    <table>
+    <h2 *ngIf="tenantStatus.progress">Loading Tenant Details</h2>
+    <table *ngIf="!tenantStatus.progress">
       <thead>
         <tr>
           <th>Id</th>
@@ -29,18 +30,19 @@ import { State, getEntities, getAction } from '../src';
       </tbody>
     </table>
   `,
-  styles: ['table td, table th { padding: .5rem 1rem; }']
+  styles: ['table td, table th { padding: .5rem 1rem; }'],
 })
 export class DemoComponent implements OnInit {
   public tenants$: Observable<string>;
   public users$: Observable<User>;
   private tenant: Tenant = {} as Tenant;
-  constructor(
-    private store: Store<State<User>>,
-    private tenantStore: Store<State<Tenant>>
-  ) {
+  public tenantStatus: Status;
+  constructor(private store: Store<State<User>>, private tenantStore: Store<State<Tenant>>) {
     this.users$ = store.select(getEntities(User));
     this.tenants$ = tenantStore.select(getEntities(Tenant));
+    tenantStore
+      .select(getLoadStatus(Tenant))
+      .subscribe((loadStatus: Status) => (this.tenantStatus = loadStatus));
   }
   public setId(event: KeyboardEvent) {
     this.tenant.id = (<HTMLInputElement>event.target).value;
