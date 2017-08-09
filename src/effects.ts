@@ -5,14 +5,8 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/take';
-import { Tenant } from '../models';
 
-import {
-  getAction,
-  ActionCollection,
-  LoadAction,
-  EntityService
-} from '../../src';
+import { getAction, ActionCollection, LoadAction, EntityService } from '.';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -24,7 +18,7 @@ function extractEntityName(reg: RegExp, value: string): string | null {
   return results[1];
 }
 @Injectable()
-export class TenantEffects {
+export class EntityEffects {
   @Effect()
   loadEntities = this._actions$
     .filter((action: Action) => action.type.match(/^.*\/load$/) !== null)

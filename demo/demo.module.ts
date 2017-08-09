@@ -10,6 +10,7 @@ import { TenantEffects } from './tenant/effects';
 import { EffectsModule } from '@ngrx/effects';
 // import { getAction, ActionCollection } from './tenant/actions';
 import { Tenant, User } from './models';
+import { EntityEffects, EntityService, APP_CONFIG } from '../src';
 
 // export const tenantAction: ActionCollection<Tenant> = getAction(Tenant);
 // export const userAction: ActionCollection<User> = getAction(User);
@@ -23,10 +24,19 @@ import { Tenant, User } from './models';
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
-    EffectsModule.forRoot([TenantEffects]),
+    EffectsModule.forRoot([EntityEffects]),
     HttpModule
   ],
-  providers: [TenantService],
+  providers: [
+    EntityService,
+    {
+      provide: APP_CONFIG,
+      useValue: {
+        apiEndpoint: 'http://localhost:3000'
+      }
+    }
+  ],
+  // providers: [{ provide: EntityService, useClass: TenantService }],
   bootstrap: [DemoComponent]
 })
 export class DemoModule {}

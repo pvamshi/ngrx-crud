@@ -14,6 +14,7 @@ export class TenantService {
     return this._http.get(this.url).map(res => res.json() as Tenant[]);
   }
   public getEntities(entityName: string): Observable<StoreModel[]> {
+    console.log('private');
     return this._http
       .get(`http://localhost:3000/${entityName}s`)
       .map(res => res.json());
