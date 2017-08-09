@@ -13,9 +13,6 @@ import {
 export interface State<T> {
   'entity': EntityState<T>;
 }
-// export const reducer = {
-//   tenant: fromTenant.reducer,
-// };
 const entityState: { [key: string]: any } = {};
 const entities: { [key: string]: any } = {};
 const actions: { [key: string]: any } = {};
@@ -26,7 +23,6 @@ export function getReducers<T extends StoreModel>(cs: { name: string }[]) {
     const entityName = c.name;
     const entityAction: ActionCollection<T> = getEntityAction(c);
     actions[entityName] = entityAction;
-    console.log('actions', actions);
     entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
     entities[entityName] = createSelector(
       entityState[entityName],
@@ -36,14 +32,8 @@ export function getReducers<T extends StoreModel>(cs: { name: string }[]) {
   });
   return reducer;
 }
-// export function getReducer<T extends StoreModel>(c: { name: string }) {
-//   return {
-//     [entityName]: getStateReducer(entityAction)
-//   };
-// }
 
 export function getEntities(c: { name: string }) {
-  console.log('entities', entities);
   return entities[c.name];
 }
 
@@ -60,7 +50,6 @@ export function getStateReducer<T extends StoreModel>(
   entityAction: ActionCollection<T>
 ) {
   return (state = getInitialState<T>(), action: Actions<T>): EntityState<T> => {
-    console.log('entityAction', entityAction);
     switch (action.type) {
       case entityAction.LOAD_SUCCESS:
         return {

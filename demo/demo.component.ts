@@ -49,19 +49,10 @@ export class DemoComponent implements OnInit {
     this.tenant.name = (<HTMLInputElement>event.target).value;
   }
   public addTenant() {
-    // this.store.dispatch(tenantAction.getAddAction(this.tenant));
+    this.store.dispatch(getAction(Tenant).getAddAction(this.tenant));
   }
   ngOnInit(): void {
     this.tenantStore.dispatch(getAction(Tenant).getLoadAction());
     this.store.dispatch(getAction(User).getLoadAction());
-    // this.store.dispatch(
-    //   getAction(User).getLoadSuccessAction([
-    //     { id: '0', first: 'fff' } as User,
-    //     { id: '1', first: 'sss' } as User
-    //   ])
-    // );
-    // this.tenantStore.dispatch(
-    // getAction(Tenant).getLoadSuccessAction([{ id: '0', name: 'First' }])
-    // );
   }
 }

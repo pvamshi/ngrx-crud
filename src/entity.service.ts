@@ -19,7 +19,6 @@ export class EntityService {
   ) {}
 
   public getEntities(entityName: string): Observable<StoreModel[]> {
-    console.log('public service', this.config);
     return this._http
       .get(`${this.config.apiEndpoint}/${entityName}s`)
       .map(res => res.json());

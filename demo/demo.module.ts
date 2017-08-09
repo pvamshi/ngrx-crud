@@ -6,14 +6,11 @@ import { DemoComponent } from './demo.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
 import { TenantService } from './tenant.service';
-import { TenantEffects } from './tenant/effects';
 import { EffectsModule } from '@ngrx/effects';
 // import { getAction, ActionCollection } from './tenant/actions';
 import { Tenant, User } from './models';
 import { EntityEffects, EntityService, APP_CONFIG } from '../src';
 
-// export const tenantAction: ActionCollection<Tenant> = getAction(Tenant);
-// export const userAction: ActionCollection<User> = getAction(User);
 @NgModule({
   declarations: [DemoComponent],
   imports: [
