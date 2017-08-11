@@ -4,6 +4,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/take';
 
 import { getAction, ActionCollection, LoadAction, EntityService, AddAction, StoreModel } from '.';
