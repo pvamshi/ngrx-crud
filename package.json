@@ -1,6 +1,6 @@
 {
   "name": "ngrx-crud",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Generate code for a given model",
   "main": "./bundles/ngrx-crud.umd.js",
   "module": "./index.js",
