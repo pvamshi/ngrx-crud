@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { StoreModel, LoadErrorAction } from '../src';
+import { StoreModel, LoadErrorAction, AddErrorAction } from '../src';
 import { Map } from 'immutable';
 import {
   Actions,
@@ -67,14 +67,6 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
           selectedEntityId: state.selectedEntityId,
           status: initStatus,
         };
-      // return Object.assign(state, {
-      //   status: Object.assign(state.status, {
-      //     load: {
-      //       progress: true,
-      //       error: null,
-      //     },
-      //   }),
-      // });
       case entityAction.LOAD_SUCCESS:
         return {
           entities: (<LoadSuccessAction<T>>action).payload,
@@ -95,11 +87,40 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
             },
           }),
         });
-      // case entityAction.ADD_SUCCESS:
-      //   return {
-      //     entities: [...state.entities, (<AddSuccessAction<T>>action).payload],
-      //     selectedEntityId: state.selectedEntityId,
-      //   };
+      case entityAction.ADD:
+        return {
+          entities: state.entities,
+          selectedEntityId: state.selectedEntityId,
+          status: Object.assign(state.status, {
+            add: {
+              progress: true,
+              error: null,
+            },
+          }),
+        };
+      case entityAction.ADD_SUCCESS:
+        return {
+          entities: [...state.entities, (<AddSuccessAction<T>>action).payload],
+          selectedEntityId: state.selectedEntityId,
+          status: Object.assign(state.status, {
+            add: {
+              progress: false,
+              error: null,
+            },
+          }),
+        };
+      case entityAction.ADD_ERROR: {
+        return {
+          entities: state.entities,
+          selectedEntityId: state.selectedEntityId,
+          status: Object.assign(state.status, {
+            add: {
+              progress: false,
+              error: (<AddErrorAction<T>>action).payload,
+            },
+          }),
+        };
+      }
       case entityAction.EDIT:
         const idx: number = state.entities.findIndex((entity: T) =>
           entity.isEqual((<EditAction<T>>action).payload),
