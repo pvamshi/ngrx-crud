@@ -15,7 +15,6 @@ import { EntityEffects, EntityService, APP_CONFIG } from '../src';
   declarations: [DemoComponent],
   imports: [
     BrowserModule,
-    StoreGeneratorModule.forRoot(),
     StoreModule.forRoot(getReducers([User, Tenant])),
     // StoreModule.forRoot(getReducer(Tenant)),
     StoreDevtoolsModule.instrument({
