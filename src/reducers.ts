@@ -122,7 +122,10 @@ function getStateReducer<T extends StoreModel>(
         };
       case entityAction.ADD_SUCCESS:
         return {
-          entities: [...state.entities, (<AddSuccessAction<T>>action).payload],
+          entities: [
+            ...(state.entities === null ? [] : state.entities),
+            (<AddSuccessAction<T>>action).payload
+          ],
           selectedEntityId: state.selectedEntityId,
           status: Object.assign(state.status, {
             add: {
@@ -144,13 +147,16 @@ function getStateReducer<T extends StoreModel>(
         };
       }
       case entityAction.EDIT:
-        const idx: number = state.entities.findIndex((entity: T) =>
-          entity.isEqual((<EditAction<T>>action).payload)
-        );
+        const idx: number =
+          state.entities === null
+            ? -1
+            : state.entities.findIndex((entity: T) =>
+                entity.isEqual((<EditAction<T>>action).payload)
+              );
         if (idx === -1) {
           return state;
         }
-        const temp = [...state.entities];
+        const temp = [...(state.entities === null ? [] : state.entities)];
         temp[idx] = (<EditAction<T>>action).payload;
         return Object.assign(state, { entities: temp });
       // case entityAction.DELETE:
