@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { StoreModel, LoadErrorAction, AddErrorAction } from '../src';
+import { StoreModel, LoadErrorAction, AddErrorAction } from '.';
 import { Map } from 'immutable';
 import {
   Actions,
@@ -8,7 +8,7 @@ import {
   AddSuccessAction,
   EditAction,
   ActionCollection,
-  getEntityAction,
+  getEntityAction
 } from './actions';
 
 export interface State<T> {
@@ -31,8 +31,14 @@ export function getReducers<T extends StoreModel>(cs: { name: string }[]) {
     const entityAction: ActionCollection<T> = getEntityAction(c);
     actions[entityName] = entityAction;
     entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
-    entities[entityName] = createSelector(entityState[entityName], getStateEntities);
-    loadStatus[entityName] = createSelector(entityState[entityName], getStateLoadStatus);
+    entities[entityName] = createSelector(
+      entityState[entityName],
+      getStateEntities
+    );
+    loadStatus[entityName] = createSelector(
+      entityState[entityName],
+      getStateLoadStatus
+    );
     reducer[entityName] = getStateReducer(entityAction);
   });
   return reducer;
@@ -42,8 +48,14 @@ export function getReducer<T extends StoreModel>(c: { name: string }) {
   const entityAction: ActionCollection<T> = getEntityAction(c);
   actions[entityName] = entityAction;
   entityState[entityName] = createFeatureSelector<EntityState<T>>(entityName);
-  entities[entityName] = createSelector(entityState[entityName], getStateEntities);
-  loadStatus[entityName] = createSelector(entityState[entityName], getStateLoadStatus);
+  entities[entityName] = createSelector(
+    entityState[entityName],
+    getStateEntities
+  );
+  loadStatus[entityName] = createSelector(
+    entityState[entityName],
+    getStateLoadStatus
+  );
   return getStateReducer(entityAction);
 }
 export function getEntities(c: { name: string }) {
@@ -59,12 +71,14 @@ export function getLoadStatus(c: { name: string }) {
 }
 
 export interface EntityState<T> {
-  entities: T[];
+  entities: T[] | null;
   selectedEntityId: string | number;
   status: Status;
 }
 
-function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>) {
+function getStateReducer<T extends StoreModel>(
+  entityAction: ActionCollection<T>
+) {
   return (state = getInitialState<T>(), action: Actions<T>): EntityState<T> => {
     switch (action.type) {
       case entityAction.LOAD:
@@ -73,7 +87,7 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
         return {
           entities: state.entities,
           selectedEntityId: state.selectedEntityId,
-          status: initStatus,
+          status: initStatus
         };
       case entityAction.LOAD_SUCCESS:
         return {
@@ -82,18 +96,18 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
           status: Object.assign(state.status, {
             load: {
               progress: false,
-              error: null,
-            },
-          }),
+              error: null
+            }
+          })
         };
       case entityAction.LOAD_ERROR:
         return Object.assign(state, {
           status: Object.assign(status, {
             load: {
               progress: false,
-              error: (<LoadErrorAction<T>>action).payload,
-            },
-          }),
+              error: (<LoadErrorAction<T>>action).payload
+            }
+          })
         });
       case entityAction.ADD:
         return {
@@ -102,9 +116,9 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
           status: Object.assign(state.status, {
             add: {
               progress: true,
-              error: null,
-            },
-          }),
+              error: null
+            }
+          })
         };
       case entityAction.ADD_SUCCESS:
         return {
@@ -113,9 +127,9 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
           status: Object.assign(state.status, {
             add: {
               progress: false,
-              error: null,
-            },
-          }),
+              error: null
+            }
+          })
         };
       case entityAction.ADD_ERROR: {
         return {
@@ -124,14 +138,14 @@ function getStateReducer<T extends StoreModel>(entityAction: ActionCollection<T>
           status: Object.assign(state.status, {
             add: {
               progress: false,
-              error: (<AddErrorAction<T>>action).payload,
-            },
-          }),
+              error: (<AddErrorAction<T>>action).payload
+            }
+          })
         };
       }
       case entityAction.EDIT:
         const idx: number = state.entities.findIndex((entity: T) =>
-          entity.isEqual((<EditAction<T>>action).payload),
+          entity.isEqual((<EditAction<T>>action).payload)
         );
         if (idx === -1) {
           return state;
@@ -159,20 +173,24 @@ function getInitStatus(): Status {
     load: { progress: false, error: null },
     add: { progress: false, error: null },
     edit: { progress: false, error: null },
-    delete: { progress: false, error: null },
+    delete: { progress: false, error: null }
   };
 }
 function getInitialState<T>(): EntityState<T> {
   return {
-    entities: [],
+    entities: null,
     selectedEntityId: '0',
-    status: getInitStatus(),
+    status: getInitStatus()
   };
 }
 export const getStateEntities = <T>(state: EntityState<T>) => state.entities;
-export const getStateLoadStatus = <T>(state: EntityState<T>) => state.status.load;
+export const getStateLoadStatus = <T>(state: EntityState<T>) =>
+  state.status.load;
 export const getStateAddStatus = <T>(state: EntityState<T>) => state.status.add;
-export const getStateEditStatus = <T>(state: EntityState<T>) => state.status.edit;
-export const getStateDeleteStatus = <T>(state: EntityState<T>) => state.status.delete;
+export const getStateEditStatus = <T>(state: EntityState<T>) =>
+  state.status.edit;
+export const getStateDeleteStatus = <T>(state: EntityState<T>) =>
+  state.status.delete;
 
-export const getSelectedId = <T>(state: EntityState<T>) => state.selectedEntityId;
+export const getSelectedId = <T>(state: EntityState<T>) =>
+  state.selectedEntityId;
