@@ -14,8 +14,7 @@ import { State, getEntities, getAction, getLoadStatus, Status } from '../src';
     <input type="text" (keyup)="setName($event)" placeholder="Tenant Name"/>
     <button type="button" (click)="addTenant()" value="Add">Add </button>
     <hr/>
-    <h2 *ngIf="tenantStatus.progress">Loading Tenant Details</h2>
-    <table *ngIf="!tenantStatus.progress">
+    <table >
       <thead>
         <tr>
           <th>Id</th>
@@ -30,18 +29,21 @@ import { State, getEntities, getAction, getLoadStatus, Status } from '../src';
       </tbody>
     </table>
   `,
-  styles: ['table td, table th { padding: .5rem 1rem; }'],
+  styles: ['table td, table th { padding: .5rem 1rem; }']
 })
 export class DemoComponent implements OnInit {
   public tenants$: Observable<string>;
   public users$: Observable<User>;
   private tenant: Tenant = {} as Tenant;
   public tenantStatus: Status;
-  constructor(private store: Store<State<User>>, private tenantStore: Store<State<Tenant>>) {
-    this.users$ = store.select(getEntities(User));
-    this.tenants$ = tenantStore.select(getEntities(Tenant));
+  constructor(
+    private store: Store<State<User>>,
+    private tenantStore: Store<State<Tenant>>
+  ) {
+    this.users$ = store.select(getEntities<User>(User));
+    this.tenants$ = tenantStore.select(getEntities<Tenant>(Tenant));
     tenantStore
-      .select(getLoadStatus(Tenant))
+      .select(getLoadStatus<Tenant>(Tenant))
       .subscribe((loadStatus: Status) => (this.tenantStatus = loadStatus));
   }
   public setId(event: KeyboardEvent) {
@@ -51,10 +53,10 @@ export class DemoComponent implements OnInit {
     this.tenant.name = (<HTMLInputElement>event.target).value;
   }
   public addTenant() {
-    this.store.dispatch(getAction(Tenant).getAddAction(this.tenant));
+    this.store.dispatch(getAction<Tenant>(Tenant).getAddAction(this.tenant));
   }
   ngOnInit(): void {
-    this.tenantStore.dispatch(getAction(Tenant).getLoadAction());
-    this.store.dispatch(getAction(User).getLoadAction());
+    this.tenantStore.dispatch(getAction<Tenant>(Tenant).getLoadAction());
+    this.store.dispatch(getAction<User>(User).getLoadAction());
   }
 }

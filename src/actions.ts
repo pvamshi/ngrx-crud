@@ -1,30 +1,40 @@
 import { Action } from '@ngrx/store';
 
-export interface LoadAction<T> extends Action {}
+export interface LoadAction<T> extends Action {
+  entityName: string;
+}
 export interface LoadSuccessAction<T> extends Action {
+  entityName: string;
   payload: T[];
 }
 
 export interface LoadErrorAction<T> extends Action {
+  entityName: string;
   payload: any;
 }
 
 export interface AddAction<T> extends Action {
+  entityName: string;
   payload: T;
 }
 export interface AddSuccessAction<T> extends Action {
+  entityName: string;
   payload: T;
 }
 export interface AddErrorAction<T> extends Action {
+  entityName: string;
   payload: any;
 }
 export interface EditAction<T> extends Action {
+  entityName: string;
   payload: T;
 }
 export interface EditSuccessAction<T> extends Action {
+  entityName: string;
   payload: T;
 }
 export interface EditErrorAction<T> extends Action {
+  entityName: string;
   payload: any;
 }
 export type Actions<T> =
@@ -85,56 +95,65 @@ export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
 
   function getLoadAction(): LoadAction<T> {
     return {
-      type: LOAD,
+      entityName,
+      type: LOAD
     };
   }
   function getLoadSuccessAction(payload: T[]): LoadSuccessAction<T> {
     return {
+      entityName,
       type: LOAD_SUCCESS,
-      payload: payload,
+      payload: payload
     };
   }
   function getLoadErrorAction(payload: any): LoadSuccessAction<T> {
     return {
+      entityName,
       type: LOAD_ERROR,
-      payload: payload,
+      payload: payload
     };
   }
   function getAddAction(payload: T): AddAction<T> {
     return {
+      entityName,
       type: ADD,
-      payload: payload,
+      payload: payload
     };
   }
   function getAddSuccessAction(payload: T): AddSuccessAction<T> {
     return {
+      entityName,
       type: ADD_SUCCESS,
-      payload: payload,
+      payload: payload
     };
   }
   function getAddErrorAction(payload: any): AddErrorAction<T> {
     return {
+      entityName,
       type: ADD_ERROR,
-      payload: payload,
+      payload: payload
     };
   }
 
   function getEditAction(payload: T): EditAction<T> {
     return {
+      entityName,
       type: EDIT,
-      payload: payload,
+      payload: payload
     };
   }
   function getEditSuccessAction(payload: T): EditSuccessAction<T> {
     return {
+      entityName,
       type: EDIT_SUCCESS,
-      payload: payload,
+      payload: payload
     };
   }
   function getEditErrorAction(payload: any): EditErrorAction<T> {
     return {
+      entityName,
       type: EDIT_ERROR,
-      payload: payload,
+      payload: payload
     };
   }
   // class SelectAction implements Action {
@@ -181,7 +200,7 @@ export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
     getLoadErrorAction,
     getEditAction,
     getEditSuccessAction,
-    getEditErrorAction,
+    getEditErrorAction
     // EditAction,
     // DeleteAction,
     // SelectAction,
