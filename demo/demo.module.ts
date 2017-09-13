@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, InjectionToken } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { DemoComponent } from './demo.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, ActionReducerMap } from '@ngrx/store';
 import { TenantService } from './tenant.service';
 import { EffectsModule } from '@ngrx/effects';
 // import { getAction, ActionCollection } from './tenant/actions';
@@ -17,18 +17,25 @@ import {
   getStateReducer,
   getStateReducer2,
   getReducer,
+  State,
 } from '../src';
 
-export const reducers = {
-  Tenant: getReducer('Tenant'),
-  User: getReducer('User'),
-};
+export const tenantReducerToken = new InjectionToken<ActionReducerMap<State<Tenant>>>(
+  'Tenant Registered Reducers',
+);
+export const userReducerToken = new InjectionToken<ActionReducerMap<State<Tenant>>>(
+  'User Registered Reducers',
+);
+export const tenantReducer = getReducer('Tenant');
+export const userReducer = getReducer('User');
 @NgModule({
   declarations: [DemoComponent],
   imports: [
     BrowserModule,
     // StoreModule.forRoot({ Tenant: getStateReducer, User: getStateReducer2 }),
-    StoreModule.forRoot(reducerToken),
+    StoreModule.forRoot({}),
+    StoreModule.forFeature(Tenant.name, tenantReducerToken),
+    StoreModule.forFeature(User.name, userReducerToken),
     // StoreModule.forRoot(getReducers([User, Tenant])),
     // StoreModule.forRoot(getReducer(Tenant)),
     StoreDevtoolsModule.instrument({
@@ -40,8 +47,12 @@ export const reducers = {
   providers: [
     EntityService,
     {
-      provide: reducerToken,
-      useValue: reducers,
+      provide: tenantReducerToken,
+      useValue: tenantReducer,
+    },
+    {
+      provide: userReducerToken,
+      useValue: userReducer,
     },
     {
       provide: APP_CONFIG,
