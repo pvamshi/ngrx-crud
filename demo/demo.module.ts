@@ -12,20 +12,16 @@ import {
   EntityEffects,
   EntityService,
   APP_CONFIG,
-  reducerToken,
-  reducerProvider,
-  getStateReducer,
-  getStateReducer2,
   getReducer,
-  State,
+  State
 } from '../src';
 
-export const tenantReducerToken = new InjectionToken<ActionReducerMap<State<Tenant>>>(
-  'Tenant Registered Reducers',
-);
-export const userReducerToken = new InjectionToken<ActionReducerMap<State<Tenant>>>(
-  'User Registered Reducers',
-);
+export const tenantReducerToken = new InjectionToken<
+  ActionReducerMap<State<Tenant>>
+>('Tenant Registered Reducers');
+export const userReducerToken = new InjectionToken<
+  ActionReducerMap<State<Tenant>>
+>('User Registered Reducers');
 export const tenantReducer = getReducer('Tenant');
 export const userReducer = getReducer('User');
 @NgModule({
@@ -39,29 +35,29 @@ export const userReducer = getReducer('User');
     // StoreModule.forRoot(getReducers([User, Tenant])),
     // StoreModule.forRoot(getReducer(Tenant)),
     StoreDevtoolsModule.instrument({
-      maxAge: 25, //  Retains last 25 states
+      maxAge: 25 //  Retains last 25 states
     }),
     EffectsModule.forRoot([EntityEffects]),
-    HttpModule,
+    HttpModule
   ],
   providers: [
     EntityService,
     {
       provide: tenantReducerToken,
-      useValue: tenantReducer,
+      useValue: tenantReducer
     },
     {
       provide: userReducerToken,
-      useValue: userReducer,
+      useValue: userReducer
     },
     {
       provide: APP_CONFIG,
       useValue: {
-        apiEndpoint: 'http://localhost:3000',
-      },
-    },
+        apiEndpoint: 'http://localhost:3000'
+      }
+    }
   ],
   // providers: [{ provide: EntityService, useClass: TenantService }],
-  bootstrap: [DemoComponent],
+  bootstrap: [DemoComponent]
 })
 export class DemoModule {}
