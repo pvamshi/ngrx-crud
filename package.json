@@ -28,13 +28,19 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "{demo,src,test}/**/*.ts": ["npm run prettier", "git add"]
+    "{demo,src,test}/**/*.ts": [
+      "npm run prettier",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pvamshi/ngrx-crud.git"
   },
-  "keywords": ["angular2", "angular"],
+  "keywords": [
+    "angular2",
+    "angular"
+  ],
   "author": "Vamshi Krishna Pothuka",
   "license": "MIT",
   "bugs": {
@@ -91,6 +97,7 @@
     "mocha": "^3.3.0",
     "offline-plugin": "^4.8.3",
     "prettier": "^1.5.3",
+    "reflect-metadata": "^0.1.10",
     "rxjs": "^5.0.1",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",

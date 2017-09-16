@@ -16,6 +16,7 @@ import {
   getEntityAction
 } from './actions';
 import { InjectionToken } from '@angular/core';
+import 'reflect-metadata';
 
 export interface State<T> {
   'entity': EntityState<T>;
@@ -76,6 +77,7 @@ export function getReducer<T extends StoreModel>(ename: string) {
     state = getInitialState<T>(),
     action: Actions<T>
   ): EntityState<T> {
+    console.log('reducer', state, action);
     // return (state = getInitialState<T>(), action: Actions<T>): EntityState<T> => {
     const { type } = action;
     switch (type) {
@@ -164,14 +166,19 @@ function getInitialState<T>(): EntityState<T> {
     status: getInitStatus()
   };
 }
-export const getStateEntities = <T>(state: EntityState<T>) => state.entities;
-export const getStateLoadStatus = <T>(state: EntityState<T>) =>
-  state.status.load;
-export const getStateAddStatus = <T>(state: EntityState<T>) => state.status.add;
-export const getStateEditStatus = <T>(state: EntityState<T>) =>
-  state.status.edit;
-export const getStateDeleteStatus = <T>(state: EntityState<T>) =>
-  state.status.delete;
+export const getStateEntities = <T>(state: EntityState<T>) => {
+  console.log('getStateEntities', state);
+  return state && state.entities;
+};
+export const getStateLoadStatus = <T>(state: EntityState<T>) => {
+  console.log('getStateLoadStatus', state);
+  return state && state.status && state.status.load;
+};
+// export const getStateAddStatus = <T>(state: EntityState<T>) => state.status.add;
+// export const getStateEditStatus = <T>(state: EntityState<T>) =>
+//   state.status.edit;
+// export const getStateDeleteStatus = <T>(state: EntityState<T>) =>
+//   state.status.delete;
 
 export const getSelectedId = <T>(state: EntityState<T>) =>
   state.selectedEntityId;

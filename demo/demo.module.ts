@@ -22,16 +22,20 @@ export const tenantReducerToken = new InjectionToken<
 export const userReducerToken = new InjectionToken<
   ActionReducerMap<State<Tenant>>
 >('User Registered Reducers');
-export const tenantReducer = getReducer('Tenant');
-export const userReducer = getReducer('User');
+// export const tenantReducer = getReducer('Tenant');
+// export const userReducer = getReducer('User');
+export const reducer = {
+  Tenant: getReducer('Tenant'),
+  User: getReducer('User')
+};
 @NgModule({
   declarations: [DemoComponent],
   imports: [
     BrowserModule,
     // StoreModule.forRoot({ Tenant: getStateReducer, User: getStateReducer2 }),
     StoreModule.forRoot({}),
-    StoreModule.forFeature(Tenant.name, tenantReducerToken),
-    StoreModule.forFeature(User.name, userReducerToken),
+    StoreModule.forFeature('entity', tenantReducerToken),
+    // StoreModule.forFeature(User.name, userReducerToken),
     // StoreModule.forRoot(getReducers([User, Tenant])),
     // StoreModule.forRoot(getReducer(Tenant)),
     StoreDevtoolsModule.instrument({
@@ -44,12 +48,12 @@ export const userReducer = getReducer('User');
     EntityService,
     {
       provide: tenantReducerToken,
-      useValue: tenantReducer
+      useValue: reducer
     },
-    {
-      provide: userReducerToken,
-      useValue: userReducer
-    },
+    // {
+    //   provide: userReducerToken,
+    //   useValue: userReducer
+    // },
     {
       provide: APP_CONFIG,
       useValue: {
