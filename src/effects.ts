@@ -7,7 +7,13 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/take';
 
-import { getAction, ActionCollection, LoadAction, EntityService, AddAction, StoreModel } from '.';
+import {
+  ActionCollection,
+  LoadAction,
+  EntityService,
+  AddAction,
+  StoreModel
+} from '.';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
@@ -26,9 +32,10 @@ export class EntityEffects<T extends StoreModel> {
     .flatMap((action: Action) => {
       const entityName = extractEntityName(/^(.*)\/load$/, action.type);
       if (entityName !== null) {
-        return this._entityService
-          .getEntities(entityName.toLowerCase())
-          .map(entities => getAction({ name: entityName }).getLoadSuccessAction(entities));
+        return this._entityService.getEntities(entityName.toLowerCase());
+        // .map(entities =>
+        //   getAction({ name: entityName }).getLoadSuccessAction(entities)
+        // )
       }
       return Observable.empty();
     });
@@ -39,12 +46,19 @@ export class EntityEffects<T extends StoreModel> {
     .flatMap((action: Action) => {
       const entityName = extractEntityName(/^(.*)\/add$/, action.type);
       if (entityName !== null) {
-        return this._entityService
-          .addEntity(entityName, (<AddAction<T>>action).payload)
-          .map(entity => getAction({ name: entityName }).getAddSuccessAction(entity));
+        return this._entityService.addEntity(
+          entityName,
+          (<AddAction<T>>action).payload
+        );
+        // .map(entity =>
+        //   getAction({ name: entityName }).getAddSuccessAction(entity)
+        // )
       }
       return Observable.empty();
     });
 
-  constructor(private _actions$: Actions, private _entityService: EntityService) {}
+  constructor(
+    private _actions$: Actions,
+    private _entityService: EntityService
+  ) {}
 }
