@@ -32,8 +32,30 @@ export class EntityService {
   ): Observable<StoreModel> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
+    console.log(' am i called here');
     return this._http
       .post(`${this.config.apiEndpoint}/${entityName}s`, entity)
+      .map(res => res.json());
+  }
+  public editEntity(
+    entityName: string,
+    entity: StoreModel
+  ): Observable<StoreModel> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    return this._http
+      .put(`${this.config.apiEndpoint}/${entityName}s`, entity)
+      .map(res => res.json());
+  }
+  public deleteEntity(
+    entityName: string,
+    entity: StoreModel
+  ): Observable<StoreModel> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    // return Observable.of(entitiy).delay(1000).map()
+    return this._http
+      .delete(`${this.config.apiEndpoint}/${entityName}s`)
       .map(res => res.json());
   }
 }

@@ -37,6 +37,18 @@ export interface EditErrorAction<T> extends Action {
   entityName: string;
   payload: any;
 }
+export interface DeleteAction<T> extends Action {
+  entityName: string;
+  payload: T;
+}
+export interface DeleteSuccessAction<T> extends Action {
+  entityName: string;
+  payload: T;
+}
+export interface DeleteErrorAction<T> extends Action {
+  entityName: string;
+  payload: any;
+}
 export type Actions<T> =
   | LoadAction<T>
   | LoadSuccessAction<T>
@@ -46,9 +58,11 @@ export type Actions<T> =
   | AddErrorAction<T>
   | EditAction<T>
   | EditSuccessAction<T>
-  | EditErrorAction<T>;
+  | EditErrorAction<T>
+  | DeleteAction<T>
+  | DeleteSuccessAction<T>
+  | DeleteErrorAction<T>;
 // | SelectAction
-// | DeleteAction
 export interface ActionCollection<T> {
   LOAD: string;
   LOAD_SUCCESS: string;
@@ -59,8 +73,10 @@ export interface ActionCollection<T> {
   EDIT: string;
   EDIT_ERROR: string;
   EDIT_SUCCESS: string;
-  SELECT: string;
   DELETE: string;
+  DELETE_ERROR: string;
+  DELETE_SUCCESS: string;
+  SELECT: string;
   getLoadAction(): LoadAction<T>;
   getLoadSuccessAction(payload: T[]): LoadSuccessAction<T>;
   getLoadErrorAction(payload: any): LoadErrorAction<T>;
@@ -70,7 +86,9 @@ export interface ActionCollection<T> {
   getEditAction(payload: T): EditAction<T>;
   getEditSuccessAction(payload: T): EditSuccessAction<T>;
   getEditErrorAction(payload: any): EditErrorAction<T>;
-  // DeleteAction: {  payload: T } & Action;
+  getDeleteAction(payload: T): DeleteAction<T>;
+  getDeleteSuccessAction(payload: T): DeleteSuccessAction<T>;
+  getDeleteErrorAction(payload: T): DeleteErrorAction<T>;
   // SelectAction: {  payload: T } & Action;
 }
 
@@ -85,9 +103,12 @@ export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
   const EDIT = entityName + '/edit';
   const EDIT_SUCCESS = entityName + '/edit/success';
   const EDIT_ERROR = entityName + '/edit/error';
-  const SELECT = entityName + '/select';
   const DELETE = entityName + '/delete';
+  const DELETE_SUCCESS = entityName + '/delete/success';
+  const DELETE_ERROR = entityName + '/delete/error';
+  const SELECT = entityName + '/select';
 
+  // DELETE
   // class LoadAction implements Action {
   //   readonly type = LOAD;
   //   constructor() {}
@@ -156,6 +177,27 @@ export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
       payload: payload
     };
   }
+  function getDeleteAction(payload: T): DeleteAction<T> {
+    return {
+      entityName,
+      type: DELETE,
+      payload: payload
+    };
+  }
+  function getDeleteSuccessAction(payload: T): EditSuccessAction<T> {
+    return {
+      entityName,
+      type: DELETE_SUCCESS,
+      payload: payload
+    };
+  }
+  function getDeleteErrorAction(payload: any): EditErrorAction<T> {
+    return {
+      entityName,
+      type: DELETE_ERROR,
+      payload: payload
+    };
+  }
   // class SelectAction implements Action {
   //   readonly type = SELECT;
   //   constructor(public payload: string | number) {}
@@ -192,6 +234,8 @@ export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
     EDIT_ERROR,
     SELECT,
     DELETE,
+    DELETE_SUCCESS,
+    DELETE_ERROR,
     getAddAction,
     getAddSuccessAction,
     getAddErrorAction,
@@ -200,7 +244,10 @@ export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
     getLoadErrorAction,
     getEditAction,
     getEditSuccessAction,
-    getEditErrorAction
+    getEditErrorAction,
+    getDeleteAction,
+    getDeleteSuccessAction,
+    getDeleteErrorAction
     // EditAction,
     // DeleteAction,
     // SelectAction,

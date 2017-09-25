@@ -1,3 +1,4 @@
+import { getEntityAction } from './actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, toPayload } from '@ngrx/effects';
 import 'rxjs/add/operator/switchMap';
@@ -6,13 +7,16 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/do';
 
 import {
   ActionCollection,
   LoadAction,
   EntityService,
   AddAction,
-  StoreModel
+  StoreModel,
+  EditAction,
+  DeleteAction
 } from '.';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -53,6 +57,37 @@ export class EntityEffects<T extends StoreModel> {
         // .map(entity =>
         //   getAction({ name: entityName }).getAddSuccessAction(entity)
         // )
+      }
+      return Observable.empty();
+    });
+
+  @Effect()
+  editEntity = this._actions$
+    .filter((action: Action) => action.type.match(/^.*\/edit$/) !== null)
+    .flatMap((action: Action) => {
+      const entityName = extractEntityName(/^.*\/edit$/, action.type);
+      if (entityName !== null) {
+        return this._entityService.editEntity(
+          entityName,
+          (<EditAction<T>>action).payload
+        );
+        // .map(entity =>
+        //   getEntityAction({ name: entityName }).getEditSuccessAction(entity)
+        // );
+      }
+      return Observable.empty();
+    });
+  @Effect()
+  deleteEntity = this._actions$
+    .filter((action: Action) => action.type.match(/^.*\/delete$/) !== null)
+    .flatMap((action: Action) => {
+      const entityName = extractEntityName(/^.*\/delete$/, action.type);
+      if (entityName !== null) {
+        return this._entityService
+          .deleteEntity(entityName, (<DeleteAction<T>>action).payload)
+          .map(entity =>
+            getEntityAction({ name: entityName }).getDeleteSuccessAction(entity)
+          );
       }
       return Observable.empty();
     });

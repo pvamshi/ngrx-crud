@@ -5,7 +5,15 @@ import {
   ActionReducerMap,
   MemoizedSelector
 } from '@ngrx/store';
-import { StoreModel, LoadErrorAction, AddErrorAction } from '.';
+import {
+  StoreModel,
+  LoadErrorAction,
+  AddErrorAction,
+  EditErrorAction,
+  EditSuccessAction,
+  DeleteErrorAction,
+  DeleteSuccessAction
+} from '.';
 import {
   Actions,
   LoadSuccessAction,
@@ -227,6 +235,88 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                   add: {
                     progress: false,
                     error: (<AddErrorAction<StoreModel>>action).payload
+                  }
+                })
+              };
+            case entity + '/edit':
+              return {
+                entities: state.entities,
+                selectedEntityId: state.selectedEntityId,
+                status: Object.assign(state.status, {
+                  edit: {
+                    progress: true,
+                    error: null
+                  }
+                })
+              };
+            case entity + '/edit/success':
+              return {
+                entities: (state.entities === null
+                  ? []
+                  : state.entities).map((entity: StoreModel) => {
+                  return entity.isEqual(
+                    (<EditSuccessAction<StoreModel>>action).payload
+                  )
+                    ? (entity = (<EditSuccessAction<StoreModel>>action).payload)
+                    : entity;
+                }),
+                selectedEntityId: state.selectedEntityId,
+                status: Object.assign(state.status, {
+                  edit: {
+                    progress: false,
+                    error: null
+                  }
+                })
+              };
+            case entity + '/edit/error':
+              return {
+                entities: state.entities,
+                selectedEntityId: state.selectedEntityId,
+                status: Object.assign(state.status, {
+                  edit: {
+                    progress: false,
+                    error: (<EditErrorAction<StoreModel>>action).payload
+                  }
+                })
+              };
+            case entity + '/delete':
+              return {
+                entities: state.entities,
+                selectedEntityId: state.selectedEntityId,
+                status: Object.assign(state.status, {
+                  edit: {
+                    progress: true,
+                    error: null
+                  }
+                })
+              };
+            case entity + '/delete/success':
+              return {
+                entities: (state.entities === null
+                  ? []
+                  : state.entities).filter((entity: StoreModel) => {
+                  return entity.isEqual(
+                    (<DeleteSuccessAction<StoreModel>>action).payload
+                  )
+                    ? false
+                    : entity;
+                }),
+                selectedEntityId: state.selectedEntityId,
+                status: Object.assign(state.status, {
+                  edit: {
+                    progress: false,
+                    error: null
+                  }
+                })
+              };
+            case entity + '/delete/error':
+              return {
+                entities: state.entities,
+                selectedEntityId: state.selectedEntityId,
+                status: Object.assign(state.status, {
+                  edit: {
+                    progress: false,
+                    error: (<DeleteErrorAction<StoreModel>>action).payload
                   }
                 })
               };
