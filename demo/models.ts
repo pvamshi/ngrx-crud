@@ -1,11 +1,11 @@
 import { StoreModel } from '../src';
 
 export class Tenant implements StoreModel {
+  id: string;
+  name: string;
   isEqual(otherStore: Tenant): boolean {
     return otherStore.id === this.id;
   }
-  id: string;
-  name: string;
 }
 
 export class User implements StoreModel {

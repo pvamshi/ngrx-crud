@@ -10,24 +10,54 @@ export interface IAppConfig {
 }
 
 export const AppConfig: IAppConfig = {
-  apiEndpoint: '/api/',
+  apiEndpoint: '/api/'
 };
 @Injectable()
 export class EntityService {
-  constructor(private _http: Http, @Inject(APP_CONFIG) private config: IAppConfig) {}
+  constructor(
+    private _http: Http,
+    @Inject(APP_CONFIG) private config: IAppConfig
+  ) {}
 
-  public getEntities(entityName: string): Observable<StoreModel[]> {
+  public getEntities<T extends StoreModel = StoreModel>(
+    entityName: string
+  ): Observable<StoreModel[]> {
     return this._http
       .get(`${this.config.apiEndpoint}/${entityName}s`)
-      .delay(3000)
+      .delay(1000)
       .map(res => res.json());
   }
 
-  public addEntity(entityName: string, entity: StoreModel): Observable<StoreModel> {
+  public addEntity(
+    entityName: string,
+    entity: StoreModel
+  ): Observable<StoreModel> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    console.log(' am i called here');
+    return this._http
+      .post(`${this.config.apiEndpoint}/${entityName}s`, entity)
+      .map(res => res.json());
+  }
+  public editEntity(
+    entityName: string,
+    entity: StoreModel
+  ): Observable<StoreModel> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     return this._http
-      .post(`${this.config.apiEndpoint}/${entityName}s`, entity)
+      .put(`${this.config.apiEndpoint}/${entityName}s`, entity)
+      .map(res => res.json());
+  }
+  public deleteEntity(
+    entityName: string,
+    entity: StoreModel
+  ): Observable<StoreModel> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    // return Observable.of(entitiy).delay(1000).map()
+    return this._http
+      .delete(`${this.config.apiEndpoint}/${entityName}s`)
       .map(res => res.json());
   }
 }

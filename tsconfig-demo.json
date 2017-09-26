@@ -4,14 +4,15 @@
     "module": "es2015",
     "outDir": "./dist",
     "baseUrl": "",
+    "paths": {
+      "@angular/*": ["../node_modules/@angular/*"]
+    },
     "emitDecoratorMetadata": false
   },
-  "exclude": [
-    "test"
-  ],
+  "exclude": ["test"],
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
-    "skipMetadataEmit" : true,
+    "skipMetadataEmit": true,
     "genDir": "./dist",
     "entryModule": "demo/demo.module#DemoModule",
     "trace": true
