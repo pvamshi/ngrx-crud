@@ -19,7 +19,9 @@ export class EntityService {
     @Inject(APP_CONFIG) private config: IAppConfig
   ) {}
 
-  public getEntities(entityName: string): Observable<StoreModel[]> {
+  public getEntities<T extends StoreModel = StoreModel>(
+    entityName: string
+  ): Observable<StoreModel[]> {
     return this._http
       .get(`${this.config.apiEndpoint}/${entityName}s`)
       .delay(1000)

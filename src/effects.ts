@@ -6,6 +6,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/empty';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/do';
 
@@ -36,12 +37,13 @@ export class EntityEffects<T extends StoreModel> {
     .flatMap((action: Action) => {
       const entityName = extractEntityName(/^(.*)\/load$/, action.type);
       if (entityName !== null) {
-        return this._entityService.getEntities(entityName.toLowerCase());
-        // .map(entities =>
-        //   getAction({ name: entityName }).getLoadSuccessAction(entities)
-        // )
+        return this._entityService
+          .getEntities<T>(entityName.toLowerCase())
+          .map((entities: T[]) =>
+            getEntityAction({ name: entityName }).getLoadSuccessAction(entities)
+          );
       }
-      return Observable.empty();
+      return Observable.of({ type: 'invalid action' });
     });
 
   @Effect()
@@ -58,7 +60,7 @@ export class EntityEffects<T extends StoreModel> {
         //   getAction({ name: entityName }).getAddSuccessAction(entity)
         // )
       }
-      return Observable.empty();
+      return Observable.of({ type: 'invalid action' });
     });
 
   @Effect()
