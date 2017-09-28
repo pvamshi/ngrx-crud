@@ -92,8 +92,7 @@ export interface ActionCollection<T> {
   // SelectAction: {  payload: T } & Action;
 }
 
-export function getEntityAction<T>(c: { name: string }): ActionCollection<T> {
-  const { name: entityName } = c;
+export function getEntityAction<T>(entityName: string): ActionCollection<T> {
   const LOAD: string = entityName + '/load';
   const LOAD_SUCCESS = entityName + '/load/success';
   const LOAD_ERROR = entityName + '/load/error';

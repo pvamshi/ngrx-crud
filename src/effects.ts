@@ -40,7 +40,7 @@ export class EntityEffects<T extends StoreModel> {
         return this._entityService
           .getEntities<T>(entityName.toLowerCase())
           .map((entities: T[]) =>
-            getEntityAction({ name: entityName }).getLoadSuccessAction(entities)
+            getEntityAction(entityName).getLoadSuccessAction(entities)
           );
       }
       return Observable.of({ type: 'invalid action' });
@@ -88,7 +88,7 @@ export class EntityEffects<T extends StoreModel> {
         return this._entityService
           .deleteEntity(entityName, (<DeleteAction<T>>action).payload)
           .map(entity =>
-            getEntityAction({ name: entityName }).getDeleteSuccessAction(entity)
+            getEntityAction(entityName).getDeleteSuccessAction(entity)
           );
       }
       return Observable.empty();
