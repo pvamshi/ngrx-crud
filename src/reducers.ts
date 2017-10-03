@@ -20,7 +20,8 @@ import {
   AddSuccessAction,
   EditAction,
   ActionCollection,
-  getEntityAction
+  getEntityAction,
+  SetSelectedEntityAction
 } from './actions';
 import { InjectionToken } from '@angular/core';
 import 'reflect-metadata';
@@ -144,7 +145,7 @@ export function getInitStatus(): Status {
 export function getInitialState<T>(): EntityMainState<T> {
   return {
     entities: null,
-    selectedEntityId: '0',
+    selectedEntityId: null,
     status: getInitStatus()
   };
 }
@@ -156,7 +157,7 @@ export type Status = {
 // }
 
 export interface EntityMainState<T> {
-  selectedEntityId: string | number;
+  selectedEntityId: string | number | null;
   entities: T[] | null;
   status: Status;
 }
@@ -174,6 +175,11 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
 
           const { type } = action;
           switch (type) {
+            case entity + '/selected':
+              return Object.assign({}, state, {
+                selectedEntityId: (<SetSelectedEntityAction<StoreModel>>action)
+                  .payload
+              });
             case entity + '/load':
               const initStatus = state.status;
               initStatus.load.progress = true;

@@ -1,5 +1,8 @@
 import { Action } from '@ngrx/store';
 
+export interface SetSelectedEntityAction<T> extends Action {
+  payload: string;
+}
 export interface LoadAction<T> extends Action {
   entityName: string;
 }
@@ -50,6 +53,7 @@ export interface DeleteErrorAction<T> extends Action {
   payload: any;
 }
 export type Actions<T> =
+  | SetSelectedEntityAction<T>
   | LoadAction<T>
   | LoadSuccessAction<T>
   | LoadErrorAction<T>
@@ -64,6 +68,7 @@ export type Actions<T> =
   | DeleteErrorAction<T>;
 // | SelectAction
 export interface ActionCollection<T> {
+  SELECTED_ENTITY: string;
   LOAD: string;
   LOAD_SUCCESS: string;
   LOAD_ERROR: string;
@@ -77,6 +82,7 @@ export interface ActionCollection<T> {
   DELETE_ERROR: string;
   DELETE_SUCCESS: string;
   SELECT: string;
+  getSetSelectedEntityAction(payload: string): SetSelectedEntityAction<T>;
   getLoadAction(): LoadAction<T>;
   getLoadSuccessAction(payload: T[]): LoadSuccessAction<T>;
   getLoadErrorAction(payload: any): LoadErrorAction<T>;
@@ -93,6 +99,7 @@ export interface ActionCollection<T> {
 }
 
 export function getEntityAction<T>(entityName: string): ActionCollection<T> {
+  const SELECTED_ENTITY: string = entityName + '/selected';
   const LOAD: string = entityName + '/load';
   const LOAD_SUCCESS = entityName + '/load/success';
   const LOAD_ERROR = entityName + '/load/error';
@@ -112,6 +119,15 @@ export function getEntityAction<T>(entityName: string): ActionCollection<T> {
   //   readonly type = LOAD;
   //   constructor() {}
   // }
+
+  function getSetSelectedEntityAction(
+    selectedEntityId: string
+  ): SetSelectedEntityAction<T> {
+    return {
+      type: SELECTED_ENTITY,
+      payload: selectedEntityId
+    };
+  }
 
   function getLoadAction(): LoadAction<T> {
     return {
@@ -222,6 +238,7 @@ export function getEntityAction<T>(entityName: string): ActionCollection<T> {
   //   | LoadSuccessAction;
 
   return {
+    SELECTED_ENTITY,
     LOAD,
     LOAD_SUCCESS,
     LOAD_ERROR,
@@ -235,6 +252,7 @@ export function getEntityAction<T>(entityName: string): ActionCollection<T> {
     DELETE,
     DELETE_SUCCESS,
     DELETE_ERROR,
+    getSetSelectedEntityAction,
     getAddAction,
     getAddSuccessAction,
     getAddErrorAction,
