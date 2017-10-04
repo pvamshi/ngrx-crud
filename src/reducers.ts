@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import {
   Action,
   createSelector,
@@ -104,6 +105,14 @@ export const entityState: {
   [key: string]: MemoizedSelector<object, BaseState>;
 } = {};
 
+export const entityListState: {
+  [key: string]: MemoizedSelector<object, StoreModel[]>;
+} = {};
+
+export const entitySelectedIdState: {
+  [key: string]: MemoizedSelector<object, string | number | null>;
+} = {};
+
 export function getEntityState(entityName: string) {
   if (!entityState[entityName]) {
     entityState[entityName] = createSelector(
@@ -114,18 +123,28 @@ export function getEntityState(entityName: string) {
   return entityState[entityName];
 }
 
-export function getEntities<T extends StoreModel>(entityName: string) {
-  return createSelector(
-    getEntityState(entityName),
-    state => <T[]>state.entities
-  );
+export function getEntities<T extends StoreModel>(
+  entityName: string
+): MemoizedSelector<object, T[]> {
+  if (!entityListState[entityName]) {
+    entityListState[entityName] = createSelector(
+      getEntityState(entityName),
+      state => <T[]>state.entities
+    );
+  }
+  return entityListState[entityName] as MemoizedSelector<object, T[]>;
 }
 
-export function getSelectedEntityId(entityName: string) {
-  return createSelector(
-    getEntityState(entityName),
-    state => state.selectedEntityId
-  );
+export function getSelectedEntityId<T extends StoreModel>(
+  entityName: string
+): MemoizedSelector<object, string | number | null> {
+  if (!entitySelectedIdState[entityName]) {
+    entitySelectedIdState[entityName] = createSelector(
+      getEntityState(entityName),
+      state => state.selectedEntityId
+    );
+  }
+  return entitySelectedIdState[entityName];
 }
 
 export function getEntityLoadStatus(entityName: string) {
