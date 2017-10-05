@@ -94,6 +94,9 @@ import 'reflect-metadata';
 
 // export const getSelectedId = <T>(state: EntityState<T>) =>
 //   state.selectedEntityId;
+export function compareEntities(arg1: any, arg2: any) {
+  return arg1.id === arg2.id;
+}
 export type EntityState = {
   [entityName: string]: EntityMainState<StoreModel>;
 };
@@ -149,6 +152,18 @@ export function getSelectedEntityId<T extends StoreModel>(
 
 export function getEntityLoadStatus(entityName: string) {
   return createSelector(getEntityState(entityName), state => state.status.load);
+}
+export function getEntityAddStatus(entityName: string) {
+  return createSelector(getEntityState(entityName), state => state.status.add);
+}
+export function getEntityEditStatus(entityName: string) {
+  return createSelector(getEntityState(entityName), state => state.status.edit);
+}
+export function getEntityDeleteStatus(entityName: string) {
+  return createSelector(
+    getEntityState(entityName),
+    state => state.status.delete
+  );
 }
 
 // createSelector(getEntityFeatureState, state => state.);
@@ -279,7 +294,12 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 entities: (state.entities === null
                   ? []
                   : state.entities).map((entity: StoreModel) => {
-                  return entity.isEqual(
+                  // TODO: need to fix isEqual is not a function error for following code
+                  // return entity.isEqual(
+                  //   (<EditSuccessAction<StoreModel>>action).payload
+                  // )
+                  return compareEntities(
+                    entity,
                     (<EditSuccessAction<StoreModel>>action).payload
                   )
                     ? (entity = (<EditSuccessAction<StoreModel>>action).payload)
@@ -309,7 +329,7 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 entities: state.entities,
                 selectedEntityId: state.selectedEntityId,
                 status: Object.assign(state.status, {
-                  edit: {
+                  delete: {
                     progress: true,
                     error: null
                   }
@@ -320,7 +340,12 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 entities: (state.entities === null
                   ? []
                   : state.entities).filter((entity: StoreModel) => {
-                  return entity.isEqual(
+                  // TODO: need to fix isEqual is not a function error for following code
+                  // return entity.isEqual((<DeleteSuccessAction<
+                  //   StoreModel
+                  // >>action).payload)
+                  return compareEntities(
+                    entity,
                     (<DeleteSuccessAction<StoreModel>>action).payload
                   )
                     ? false
@@ -328,7 +353,7 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 }),
                 selectedEntityId: state.selectedEntityId,
                 status: Object.assign(state.status, {
-                  edit: {
+                  delete: {
                     progress: false,
                     error: null
                   }
@@ -339,7 +364,7 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 entities: state.entities,
                 selectedEntityId: state.selectedEntityId,
                 status: Object.assign(state.status, {
-                  edit: {
+                  delete: {
                     progress: false,
                     error: (<DeleteErrorAction<StoreModel>>action).payload
                   }

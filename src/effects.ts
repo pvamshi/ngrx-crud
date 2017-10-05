@@ -9,6 +9,7 @@ import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
 
 import {
   ActionCollection,
@@ -41,7 +42,12 @@ export class EntityEffects<T extends StoreModel> {
           .getEntities<T>(entityName.toLowerCase())
           .map((entities: T[]) =>
             getEntityAction(entityName).getLoadSuccessAction(entities)
-          );
+          )
+          .catch(err => {
+            return Observable.of(
+              getEntityAction(entityName).getLoadErrorAction(err.data)
+            );
+          });
       }
       return Observable.of({ type: 'invalid action' });
     });
@@ -52,13 +58,16 @@ export class EntityEffects<T extends StoreModel> {
     .flatMap((action: Action) => {
       const entityName = extractEntityName(/^(.*)\/add$/, action.type);
       if (entityName !== null) {
-        return this._entityService.addEntity(
-          entityName,
-          (<AddAction<T>>action).payload
-        );
-        // .map(entity =>
-        //   getAction({ name: entityName }).getAddSuccessAction(entity)
-        // )
+        return this._entityService
+          .addEntity(entityName, (<AddAction<T>>action).payload)
+          .map(entity =>
+            getEntityAction(entityName).getAddSuccessAction(entity)
+          )
+          .catch(err => {
+            return Observable.of(
+              getEntityAction(entityName).getAddErrorAction(err.data)
+            );
+          });
       }
       return Observable.of({ type: 'invalid action' });
     });
@@ -67,15 +76,18 @@ export class EntityEffects<T extends StoreModel> {
   editEntity = this._actions$
     .filter((action: Action) => action.type.match(/^.*\/edit$/) !== null)
     .flatMap((action: Action) => {
-      const entityName = extractEntityName(/^.*\/edit$/, action.type);
+      const entityName = extractEntityName(/^(.*)\/edit$/, action.type);
       if (entityName !== null) {
-        return this._entityService.editEntity(
-          entityName,
-          (<EditAction<T>>action).payload
-        );
-        // .map(entity =>
-        //   getEntityAction({ name: entityName }).getEditSuccessAction(entity)
-        // );
+        return this._entityService
+          .editEntity(entityName, (<EditAction<T>>action).payload)
+          .map(entity =>
+            getEntityAction(entityName).getEditSuccessAction(entity)
+          )
+          .catch(err => {
+            return Observable.of(
+              getEntityAction(entityName).getEditErrorAction(err.data)
+            );
+          });
       }
       return Observable.empty();
     });
@@ -83,13 +95,18 @@ export class EntityEffects<T extends StoreModel> {
   deleteEntity = this._actions$
     .filter((action: Action) => action.type.match(/^.*\/delete$/) !== null)
     .flatMap((action: Action) => {
-      const entityName = extractEntityName(/^.*\/delete$/, action.type);
+      const entityName = extractEntityName(/^(.*)\/delete$/, action.type);
       if (entityName !== null) {
         return this._entityService
           .deleteEntity(entityName, (<DeleteAction<T>>action).payload)
           .map(entity =>
             getEntityAction(entityName).getDeleteSuccessAction(entity)
-          );
+          )
+          .catch(err => {
+            return Observable.of(
+              getEntityAction(entityName).getDeleteErrorAction(err.data)
+            );
+          });
       }
       return Observable.empty();
     });
