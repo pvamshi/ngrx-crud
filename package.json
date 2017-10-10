@@ -123,5 +123,8 @@
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "@ngrx/entity": "github:ngrx/entity-builds"
   }
 }

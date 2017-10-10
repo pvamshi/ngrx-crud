@@ -18,7 +18,7 @@ import {
   AddAction,
   StoreModel,
   EditAction,
-  DeleteAction
+  DeleteAction,
 } from '.';
 import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -40,13 +40,9 @@ export class EntityEffects<T extends StoreModel> {
       if (entityName !== null) {
         return this._entityService
           .getEntities<T>(entityName.toLowerCase())
-          .map((entities: T[]) =>
-            getEntityAction(entityName).getLoadSuccessAction(entities)
-          )
+          .map((entities: T[]) => getEntityAction(entityName).getLoadSuccessAction(entities))
           .catch(err => {
-            return Observable.of(
-              getEntityAction(entityName).getLoadErrorAction(err.data)
-            );
+            return Observable.of(getEntityAction(entityName).getLoadErrorAction(err.data));
           });
       }
       return Observable.of({ type: 'invalid action' });
@@ -60,13 +56,9 @@ export class EntityEffects<T extends StoreModel> {
       if (entityName !== null) {
         return this._entityService
           .addEntity(entityName, (<AddAction<T>>action).payload)
-          .map(entity =>
-            getEntityAction(entityName).getAddSuccessAction(entity)
-          )
+          .map(entity => getEntityAction(entityName).getAddSuccessAction(entity))
           .catch(err => {
-            return Observable.of(
-              getEntityAction(entityName).getAddErrorAction(err.data)
-            );
+            return Observable.of(getEntityAction(entityName).getAddErrorAction(err.data));
           });
       }
       return Observable.of({ type: 'invalid action' });
@@ -80,13 +72,9 @@ export class EntityEffects<T extends StoreModel> {
       if (entityName !== null) {
         return this._entityService
           .editEntity(entityName, (<EditAction<T>>action).payload)
-          .map(entity =>
-            getEntityAction(entityName).getEditSuccessAction(entity)
-          )
+          .map(entity => getEntityAction(entityName).getEditSuccessAction(entity))
           .catch(err => {
-            return Observable.of(
-              getEntityAction(entityName).getEditErrorAction(err.data)
-            );
+            return Observable.of(getEntityAction(entityName).getEditErrorAction(err.data));
           });
       }
       return Observable.empty();
@@ -99,20 +87,13 @@ export class EntityEffects<T extends StoreModel> {
       if (entityName !== null) {
         return this._entityService
           .deleteEntity(entityName, (<DeleteAction<T>>action).payload)
-          .map(entity =>
-            getEntityAction(entityName).getDeleteSuccessAction(entity)
-          )
+          .map(entity => getEntityAction(entityName).getDeleteSuccessAction(entity))
           .catch(err => {
-            return Observable.of(
-              getEntityAction(entityName).getDeleteErrorAction(err.data)
-            );
+            return Observable.of(getEntityAction(entityName).getDeleteErrorAction(err.data));
           });
       }
       return Observable.empty();
     });
 
-  constructor(
-    private _actions$: Actions,
-    private _entityService: EntityService
-  ) {}
+  constructor(private _actions$: Actions, private _entityService: EntityService) {}
 }
