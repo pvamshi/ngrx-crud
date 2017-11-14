@@ -1,6 +1,6 @@
 {
   "name": "ngrx-crud",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Generate code for a given model",
   "main": "./bundles/ngrx-crud.umd.js",
   "module": "./index.js",
@@ -124,6 +124,5 @@
       "path": "node_modules/cz-conventional-changelog"
     }
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
