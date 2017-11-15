@@ -4,7 +4,7 @@ import {
   createSelector,
   createFeatureSelector,
   ActionReducerMap,
-  MemoizedSelector,
+  MemoizedSelector
 } from '@ngrx/store';
 import {
   StoreModel,
@@ -13,7 +13,7 @@ import {
   EditErrorAction,
   EditSuccessAction,
   DeleteErrorAction,
-  DeleteSuccessAction,
+  DeleteSuccessAction
 } from '.';
 import {
   Actions,
@@ -22,7 +22,7 @@ import {
   EditAction,
   ActionCollection,
   getEntityAction,
-  SetSelectedEntityAction,
+  SetSelectedEntityAction
 } from './actions';
 import { InjectionToken } from '@angular/core';
 import 'reflect-metadata';
@@ -101,7 +101,9 @@ export type EntityStatus = { progress: boolean; error: any };
 export type EntityState = {
   [entityName: string]: EntityMainState<StoreModel>;
 };
-export const getEntityFeatureState = createFeatureSelector<EntityState>('entity');
+export const getEntityFeatureState = createFeatureSelector<EntityState>(
+  'entity'
+);
 
 export const entityState: {
   [key: string]: MemoizedSelector<object, BaseState>;
@@ -129,70 +131,81 @@ export const entitySelectedIdState: {
 
 export function getEntityState(entityName: string) {
   if (!entityState[entityName]) {
-    entityState[entityName] = createSelector(getEntityFeatureState, state => state[entityName]);
+    entityState[entityName] = createSelector(
+      getEntityFeatureState,
+      state => state[entityName]
+    );
   }
   return entityState[entityName];
 }
 
 export function getEntities<T extends StoreModel>(
-  entityName: string,
+  entityName: string
 ): MemoizedSelector<object, T[]> {
   if (!entityListState[entityName]) {
     entityListState[entityName] = createSelector(
       getEntityState(entityName),
-      state => <T[]>state.entities,
+      state => <T[]>state.entities
     );
   }
   return entityListState[entityName] as MemoizedSelector<object, T[]>;
 }
 
 export function getSelectedEntityId<T extends StoreModel>(
-  entityName: string,
+  entityName: string
 ): MemoizedSelector<object, string | number | null> {
   if (!entitySelectedIdState[entityName]) {
     entitySelectedIdState[entityName] = createSelector(
       getEntityState(entityName),
-      state => state.selectedEntityId,
+      state => state.selectedEntityId
     );
   }
   return entitySelectedIdState[entityName];
 }
 
-export function getEntityAddStatus(entityName: string): MemoizedSelector<object, EntityStatus> {
+export function getEntityAddStatus(
+  entityName: string
+): MemoizedSelector<object, EntityStatus> {
   if (!entityAddStatusState[entityName]) {
     entityAddStatusState[entityName] = createSelector(
       getEntityState(entityName),
-      state => state.status.add,
+      state => state.status.add
     );
   }
   return entityAddStatusState[entityName];
 }
 
-export function getEntityEditStatus(entityName: string): MemoizedSelector<object, EntityStatus> {
+export function getEntityEditStatus(
+  entityName: string
+): MemoizedSelector<object, EntityStatus> {
   if (!entityEditStatusState[entityName]) {
     entityEditStatusState[entityName] = createSelector(
       getEntityState(entityName),
-      state => state.status.edit,
+      state => state.status.edit
     );
   }
   return entityEditStatusState[entityName];
 }
 
-export function getEntityDeleteStatus(entityName: string): MemoizedSelector<object, EntityStatus> {
+export function getEntityDeleteStatus(
+  entityName: string
+): MemoizedSelector<object, EntityStatus> {
   if (!entityDeleteStatusState[entityName]) {
     entityDeleteStatusState[entityName] = createSelector(
       getEntityState(entityName),
-      state => state.status.delete,
+      state => state.status.delete
     );
   }
   return entityDeleteStatusState[entityName];
 }
 
-export function getEntityLoadStatus(entityName: string): MemoizedSelector<object, EntityStatus> {
+export function getEntityLoadStatus(
+  entityName: string
+): MemoizedSelector<object, EntityStatus> {
   if (!entityLoadStatusState[entityName]) {
     entityLoadStatusState[entityName] = createSelector(
       getEntityState(entityName),
-      state => state.status.load,
+      state => state.status.load
     );
   }
   return entityLoadStatusState[entityName];
@@ -205,14 +218,14 @@ export function getInitStatus(): Status {
     load: { progress: false, error: null },
     add: { progress: false, error: null },
     edit: { progress: false, error: null },
-    delete: { progress: false, error: null },
+    delete: { progress: false, error: null }
   };
 }
 export function getInitialState<T>(): EntityMainState<T> {
   return {
     entities: null,
     selectedEntityId: null,
-    status: getInitStatus(),
+    status: getInitStatus()
   };
 }
 export type Status = {
@@ -235,7 +248,7 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
       Object.assign(acc, {
         [entity]: function(
           state: BaseState = getInitialState<StoreModel>(),
-          action: Action,
+          action: Action
         ): BaseState {
           // return state;
 
@@ -243,7 +256,8 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
           switch (type) {
             case entity + '/selected':
               return Object.assign({}, state, {
-                selectedEntityId: (<SetSelectedEntityAction<StoreModel>>action).payload,
+                selectedEntityId: (<SetSelectedEntityAction<StoreModel>>action)
+                  .payload
               });
             case entity + '/load':
               const initStatus = state.status;
@@ -251,7 +265,7 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
               return {
                 entities: state.entities,
                 selectedEntityId: state.selectedEntityId,
-                status: initStatus,
+                status: initStatus
               };
             case entity + '/load/success':
               return {
@@ -260,18 +274,18 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   load: {
                     progress: false,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/load/error':
               return Object.assign({}, state, {
-                status: Object.assign({}, status, {
+                status: Object.assign({}, state.status, {
                   load: {
                     progress: false,
-                    error: (<LoadErrorAction<StoreModel>>action).payload,
-                  },
-                }),
+                    error: (<LoadErrorAction<StoreModel>>action).payload
+                  }
+                })
               });
             case entity + '/add':
               return {
@@ -280,23 +294,23 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign({}, state.status, {
                   add: {
                     progress: true,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/add/success':
               return {
                 entities: [
                   ...(state.entities === null ? [] : state.entities),
-                  (<AddSuccessAction<StoreModel>>action).payload,
+                  (<AddSuccessAction<StoreModel>>action).payload
                 ],
                 selectedEntityId: state.selectedEntityId,
                 status: Object.assign({}, state.status, {
                   add: {
                     progress: false,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/add/error':
               return {
@@ -305,9 +319,9 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   add: {
                     progress: false,
-                    error: (<AddErrorAction<StoreModel>>action).payload,
-                  },
-                }),
+                    error: (<AddErrorAction<StoreModel>>action).payload
+                  }
+                })
               };
             case entity + '/edit':
               return {
@@ -316,9 +330,9 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   edit: {
                     progress: true,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/edit/success':
               return {
@@ -329,7 +343,10 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                   // return entity.isEqual(
                   //   (<EditSuccessAction<StoreModel>>action).payload
                   // )
-                  return compareEntities(entity, (<EditSuccessAction<StoreModel>>action).payload)
+                  return compareEntities(
+                    entity,
+                    (<EditSuccessAction<StoreModel>>action).payload
+                  )
                     ? (entity = (<EditSuccessAction<StoreModel>>action).payload)
                     : entity;
                 }),
@@ -337,9 +354,9 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   edit: {
                     progress: false,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/edit/error':
               return {
@@ -348,9 +365,9 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   edit: {
                     progress: false,
-                    error: (<EditErrorAction<StoreModel>>action).payload,
-                  },
-                }),
+                    error: (<EditErrorAction<StoreModel>>action).payload
+                  }
+                })
               };
             case entity + '/delete':
               return {
@@ -359,9 +376,9 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   delete: {
                     progress: true,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/delete/success':
               return {
@@ -372,7 +389,10 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                   // return entity.isEqual((<DeleteSuccessAction<
                   //   StoreModel
                   // >>action).payload)
-                  return compareEntities(entity, (<DeleteSuccessAction<StoreModel>>action).payload)
+                  return compareEntities(
+                    entity,
+                    (<DeleteSuccessAction<StoreModel>>action).payload
+                  )
                     ? false
                     : entity;
                 }),
@@ -380,9 +400,9 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   delete: {
                     progress: false,
-                    error: null,
-                  },
-                }),
+                    error: null
+                  }
+                })
               };
             case entity + '/delete/error':
               return {
@@ -391,15 +411,15 @@ export function getReducerr(entities: string[]): ActionReducerMap<BaseState> {
                 status: Object.assign(state.status, {
                   delete: {
                     progress: false,
-                    error: (<DeleteErrorAction<StoreModel>>action).payload,
-                  },
-                }),
+                    error: (<DeleteErrorAction<StoreModel>>action).payload
+                  }
+                })
               };
             default:
               return state;
           }
-        },
+        }
       }),
-    {} as ActionReducerMap<BaseState>,
+    {} as ActionReducerMap<BaseState>
   );
 }

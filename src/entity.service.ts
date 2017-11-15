@@ -1,8 +1,9 @@
-import { Injectable, Inject, OpaqueToken } from '@angular/core';
+import { Injectable, Inject, OpaqueToken, InjectionToken } from '@angular/core';
 import { Http, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { StoreModel } from './store-model';
-export let APP_CONFIG = new OpaqueToken('app.config');
+// export let APP_CONFIG = new OpaqueToken('app.config');
+export let APP_CONFIG = new InjectionToken<IAppConfig>('app.config');
 import 'rxjs/add/operator/delay';
 
 export interface IAppConfig {
